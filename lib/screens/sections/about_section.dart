@@ -30,39 +30,41 @@ class AboutSection extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(
                   right: isMobile ? 0 : 40, bottom: isMobile ? 40 : 0),
-              child: ClipRRect(
+              constraints: BoxConstraints(
+                maxWidth: isMobile ? double.infinity : 500,
+              ),
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  'https://img.freepik.com/free-photo/programming-background-with-person-working-with-codes-computer_23-2150010125.jpg',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 400,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      width: double.infinity,
-                      height: 400,
-                      color: Colors.grey[200],
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    blurRadius: 15,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
+              child: AspectRatio(
+                aspectRatio:
+                    16 / 9, // Using a common aspect ratio for the container
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'assets/images/about.jpg',
+                    fit: BoxFit.contain,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.grey[200],
+                        child: const Center(
+                          child: Icon(Icons.error, size: 50),
                         ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: double.infinity,
-                      height: 400,
-                      color: Colors.grey[200],
-                      child: const Center(
-                        child: Icon(Icons.error),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ).animate(effects: AnimationUtils.fadeSlideUp),
