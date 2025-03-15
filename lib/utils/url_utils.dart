@@ -1,4 +1,6 @@
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/material.dart';
+import 'scroll_utils.dart'; // Import for ScrollToSectionNotification
 
 class UrlUtils {
   static Future<void> openUrl(String url) async {
@@ -77,9 +79,25 @@ class UrlUtils {
     await openUrl(url);
   }
 
-  static void scrollToSection(String sectionId) {
-    // This is a placeholder method that will be implemented in the portfolio_app.dart file
-    // The actual implementation will use the scroll controller to scroll to the section
-    print('Scrolling to section: $sectionId');
+  // Store a BuildContext that can be set from the hero section
+  static BuildContext? _currentContext;
+
+  static void setContext(BuildContext context) {
+    _currentContext = context;
   }
+
+  static void scrollToSection(String sectionId) {
+    if (_currentContext != null) {
+      final notification = ScrollToSectionNotification(sectionId);
+      notification.dispatch(_currentContext!);
+    } else if (navigatorKey.currentContext != null) {
+      // Fallback to using navigator key if context isn't set
+      final notification = ScrollToSectionNotification(sectionId);
+      notification.dispatch(navigatorKey.currentContext!);
+    }
+  }
+
+  // Add a global navigator key to access context outside of widgets
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 }

@@ -195,6 +195,7 @@ class _ContactSectionState extends State<ContactSection> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    elevation: 2,
                   ),
                   child: const Text(
                     'Send Message',
@@ -220,11 +221,19 @@ class _ContactSectionState extends State<ContactSection> {
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
   }) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
-        prefixIcon: Icon(prefixIcon),
+        hintStyle: TextStyle(
+          color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+        ),
+        prefixIcon: Icon(
+          prefixIcon,
+          color: isDarkMode ? Colors.grey[400] : null,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(
@@ -239,9 +248,15 @@ class _ContactSectionState extends State<ContactSection> {
           ),
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: isDarkMode
+            ? Theme.of(context).inputDecorationTheme.fillColor ??
+                Theme.of(context).cardColor
+            : Colors.white,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      style: TextStyle(
+        color: Theme.of(context).textTheme.bodyLarge?.color,
       ),
       keyboardType: keyboardType,
       maxLines: maxLines,

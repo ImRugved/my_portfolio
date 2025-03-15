@@ -99,7 +99,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -108,12 +108,12 @@ class _ProjectsSectionState extends State<ProjectsSection> {
           children: categories.map((category) {
             final isSelected = _selectedCategory == category['id'];
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 3),
               child: FilterChip(
                 showCheckmark: false,
                 label: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
                   child: Text(
                     category['name'] as String,
                     style: TextStyle(
@@ -135,7 +135,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 selectedColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(25),
                   side: BorderSide(
                     width: 1.5,
                     color: isSelected
@@ -314,12 +314,12 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(
+                                    content: const Text(
                                       'This app will be available on Google Play Store soon. Thank you for your patience.',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     backgroundColor: Colors.blue.shade800,
-                                    duration: Duration(seconds: 5),
+                                    duration: const Duration(seconds: 5),
                                     behavior: SnackBarBehavior.floating,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -360,12 +360,12 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(
+                                    content: const Text(
                                       'This app will be available on App Store soon. Thank you for your patience.',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     backgroundColor: Colors.blue.shade800,
-                                    duration: Duration(seconds: 5),
+                                    duration: const Duration(seconds: 5),
                                     behavior: SnackBarBehavior.floating,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),

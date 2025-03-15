@@ -14,6 +14,12 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
     'Mobile Application Developer',
     'Cross-Platform App Developer',
   ];
+  static const List<String> headings = [
+    'My Digital Professional Footprint',
+    'Showcasing Excellence in Code & Design',
+    'Paint Your Professional Story',
+    'Let\'s Connect',
+  ];
 
   static const List<Map<String, dynamic>> socialLinks = [
     {

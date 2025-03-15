@@ -9,6 +9,7 @@ import '../../utils/animation_utils.dart';
 import '../../utils/responsive_utils.dart' as app_responsive;
 import '../../utils/url_utils.dart';
 import '../../widgets/common_widgets.dart';
+import '../../utils/scroll_utils.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -17,6 +18,9 @@ class HeroSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
     final isTablet = ResponsiveBreakpoints.of(context).isTablet;
+
+    // Set the context in the UrlUtils for scrolling
+    UrlUtils.setContext(context);
 
     return SectionContainer(
       backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.05),
@@ -101,13 +105,22 @@ class HeroSection extends StatelessWidget {
                     children: [
                       CustomButton(
                         text: 'Hire Me',
-                        onPressed: () => UrlUtils.scrollToSection('contact'),
+                        onPressed: () => UrlUtils.sendEmail(
+                          PortfolioData.email,
+                          subject: 'Job Opportunity for ${PortfolioData.name2}',
+                          body:
+                              'Hello ${PortfolioData.name2},\n\nI am interested in hiring you for a project. Let\'s discuss further.\n\nRegards,',
+                        ),
                         icon: Icons.person_add,
                         color: Colors.white,
                       ),
                       CustomButton(
                         text: 'View Projects',
-                        onPressed: () => UrlUtils.scrollToSection('projects'),
+                        onPressed: () {
+                          // Use direct notification dispatch to ensure reliable scrolling
+                          ScrollToSectionNotification.scrollTo(
+                              context, 'Projects');
+                        },
                         isOutlined: true,
                         icon: Icons.work,
                       ),
@@ -212,9 +225,22 @@ class HeroSection extends StatelessWidget {
                             spreadRadius: 0,
                           ),
                         ],
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/profile.png'),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/profile.png',
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Silent error handling without print statements
+                            return Container(
+                              color: Colors.grey[300],
+                              child: Icon(
+                                Icons.person,
+                                size: isMobile ? 100 : 150,
+                                color: Colors.grey[600],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ).animate(

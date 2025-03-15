@@ -6,6 +6,7 @@ import '../../theme/theme_constants.dart';
 import '../../utils/animation_utils.dart';
 import '../../utils/responsive_utils.dart' as app_responsive;
 import '../../widgets/common_widgets.dart';
+import '../../utils/scroll_utils.dart'; // Import for ScrollToSectionNotification
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -30,39 +31,38 @@ class AboutSection extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(
                   right: isMobile ? 0 : 40, bottom: isMobile ? 40 : 0),
-              constraints: BoxConstraints(
-                maxWidth: isMobile ? double.infinity : 500,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    blurRadius: 15,
-                    spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: AspectRatio(
-                aspectRatio:
-                    16 / 9, // Using a common aspect ratio for the container
-                child: ClipRRect(
+              alignment: Alignment.center,
+              child: Container(
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
+                  border: Border.all(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2),
+                      blurRadius: 15,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(38),
                   child: Image.asset(
                     'assets/images/about.jpg',
-                    fit: BoxFit.scaleDown,
-                    width: double.infinity,
-                    height: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        color: Colors.grey[200],
+                        width: 300,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(38),
+                        ),
                         child: const Center(
                           child: Icon(Icons.error, size: 50),
                         ),
@@ -113,7 +113,7 @@ class AboutSection extends StatelessWidget {
                 OutlinedButton.icon(
                   onPressed: () {
                     // Using Notification to communicate with parent
-                    ScrollToSectionNotification("Skills").dispatch(context);
+                    ScrollToSectionNotification.scrollTo(context, "Skills");
                   },
                   icon: Icon(Icons.arrow_circle_right_outlined,
                       color: Theme.of(context).colorScheme.primary),
@@ -141,11 +141,4 @@ class AboutSection extends StatelessWidget {
       ),
     );
   }
-}
-
-// Custom notification to request scrolling to a section
-class ScrollToSectionNotification extends Notification {
-  final String sectionName;
-
-  ScrollToSectionNotification(this.sectionName);
 }

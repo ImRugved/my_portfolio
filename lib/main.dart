@@ -4,6 +4,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:rugved_portfolio_flutter/screens/portfolio_app.dart';
 import 'package:rugved_portfolio_flutter/theme/theme_provider.dart';
 import 'package:rugved_portfolio_flutter/theme/theme_constants.dart';
+import 'package:rugved_portfolio_flutter/utils/url_utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeProvider(),
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) => MaterialApp(
-          title: 'Rugved | Portfolio',
+          navigatorKey: UrlUtils.navigatorKey,
+          title: 'Portfolio - Beyond the Resume',
           debugShowCheckedModeBanner: false,
           theme: ThemeConstants.lightTheme,
           darkTheme: ThemeConstants.darkTheme,

@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:file_saver/file_saver.dart';
 import '../theme/theme_provider.dart';
 import '../widgets/animated_logo.dart';
+import '../utils/scroll_utils.dart';
 import 'sections/home_section.dart';
 import 'sections/about_section.dart';
 import 'sections/experience_section.dart';
@@ -17,7 +18,6 @@ import 'sections/header_section.dart';
 import 'sections/hero_section.dart';
 import 'sections/skills_section.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'sections/about_section.dart';
 
 class PortfolioApp extends StatefulWidget {
   const PortfolioApp({super.key});

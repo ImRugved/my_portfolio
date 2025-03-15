@@ -40,7 +40,7 @@ class FooterSection extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            '© ${DateTime.now().year} ${PortfolioData.name}. All rights reserved.',
+            '© ${DateTime.now().year} ${PortfolioData.name2}. All rights reserved.',
             style: Theme.of(context).textTheme.bodySmall,
             textAlign: TextAlign.center,
           ).animate(effects: AnimationUtils.fadeSlideUp),
