@@ -28,6 +28,7 @@ class PortfolioApp extends StatefulWidget {
 
 class _PortfolioAppState extends State<PortfolioApp> {
   final _scrollController = ScrollController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Map<String, GlobalKey> _sectionKeys = {
     'Home': GlobalKey(),
     'About': GlobalKey(),
@@ -37,7 +38,6 @@ class _PortfolioAppState extends State<PortfolioApp> {
     'Contact': GlobalKey(),
   };
   String _activeSection = 'Home';
-  bool _isMobileMenuOpen = false;
 
   @override
   void initState() {
@@ -71,17 +71,36 @@ class _PortfolioAppState extends State<PortfolioApp> {
   }
 
   void _scrollToSection(String section) {
+    // Close drawer if open
+    if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+      Navigator.of(context).pop();
+
+      // Add a small delay to ensure the drawer is fully closed before scrolling
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _performScroll(section);
+      });
+    } else {
+      _performScroll(section);
+    }
+  }
+
+  void _performScroll(String section) {
     final key = _sectionKeys[section];
-    final context = key?.currentContext;
-    if (context != null) {
-      final box = context.findRenderObject() as RenderBox;
+    if (key?.currentContext != null) {
+      final box = key!.currentContext!.findRenderObject() as RenderBox;
       final position = box.localToGlobal(Offset.zero);
       final offset = _scrollController.offset + position.dy - 80;
+
       _scrollController.animateTo(
         offset,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
+
+      // Update active section
+      if (_activeSection != section) {
+        setState(() => _activeSection = section);
+      }
     }
   }
 
@@ -103,131 +122,197 @@ class _PortfolioAppState extends State<PortfolioApp> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDesktop = ResponsiveBreakpoints.of(context).isDesktop;
+    final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: HeaderSection(
         sections: _sectionKeys.keys.toList(),
         onSectionSelected: _scrollToSection,
         activeSection: _activeSection,
+        scaffoldKey: _scaffoldKey,
       ),
-      body: Stack(
-        children: [
-          NotificationListener<ScrollToSectionNotification>(
-            onNotification: (notification) {
-              // Handle notification by scrolling to the section
-              if (_sectionKeys.containsKey(notification.sectionName)) {
-                _scrollToSection(notification.sectionName);
-              }
-              return true; // Stop notification propagation
-            },
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  VisibilityDetector(
-                    key: _sectionKeys['Home']!,
-                    onVisibilityChanged: (info) {
-                      if (info.visibleFraction > 0.5) {
-                        setState(() => _activeSection = 'Home');
-                      }
-                    },
-                    child: const HeroSection(),
-                  ),
-                  VisibilityDetector(
-                    key: _sectionKeys['About']!,
-                    onVisibilityChanged: (info) {
-                      if (info.visibleFraction > 0.5) {
-                        setState(() => _activeSection = 'About');
-                      }
-                    },
-                    child: const AboutSection(),
-                  ),
-                  VisibilityDetector(
-                    key: _sectionKeys['Skills']!,
-                    onVisibilityChanged: (info) {
-                      if (info.visibleFraction > 0.5) {
-                        setState(() => _activeSection = 'Skills');
-                      }
-                    },
-                    child: const SkillsSection(),
-                  ),
-                  VisibilityDetector(
-                    key: _sectionKeys['Experience']!,
-                    onVisibilityChanged: (info) {
-                      if (info.visibleFraction > 0.5) {
-                        setState(() => _activeSection = 'Experience');
-                      }
-                    },
-                    child: const ExperienceSection(),
-                  ),
-                  VisibilityDetector(
-                    key: _sectionKeys['Projects']!,
-                    onVisibilityChanged: (info) {
-                      if (info.visibleFraction > 0.5) {
-                        setState(() => _activeSection = 'Projects');
-                      }
-                    },
-                    child: const ProjectsSection(),
-                  ),
-                  VisibilityDetector(
-                    key: _sectionKeys['Contact']!,
-                    onVisibilityChanged: (info) {
-                      if (info.visibleFraction > 0.5) {
-                        setState(() => _activeSection = 'Contact');
-                      }
-                    },
-                    child: const ContactSection(),
-                  ),
-                  const FooterSection(),
-                ],
+      drawer: isMobile ? _buildDrawer() : null,
+      body: NotificationListener<ScrollToSectionNotification>(
+        onNotification: (notification) {
+          // Handle notification by scrolling to the section
+          if (_sectionKeys.containsKey(notification.sectionName)) {
+            _scrollToSection(notification.sectionName);
+          }
+          return true; // Stop notification propagation
+        },
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              VisibilityDetector(
+                key: _sectionKeys['Home']!,
+                onVisibilityChanged: (info) {
+                  if (info.visibleFraction > 0.5) {
+                    setState(() => _activeSection = 'Home');
+                  }
+                },
+                child: const HeroSection(),
               ),
-            ),
+              VisibilityDetector(
+                key: _sectionKeys['About']!,
+                onVisibilityChanged: (info) {
+                  if (info.visibleFraction > 0.5) {
+                    setState(() => _activeSection = 'About');
+                  }
+                },
+                child: const AboutSection(),
+              ),
+              VisibilityDetector(
+                key: _sectionKeys['Skills']!,
+                onVisibilityChanged: (info) {
+                  if (info.visibleFraction > 0.5) {
+                    setState(() => _activeSection = 'Skills');
+                  }
+                },
+                child: const SkillsSection(),
+              ),
+              VisibilityDetector(
+                key: _sectionKeys['Experience']!,
+                onVisibilityChanged: (info) {
+                  if (info.visibleFraction > 0.5) {
+                    setState(() => _activeSection = 'Experience');
+                  }
+                },
+                child: const ExperienceSection(),
+              ),
+              VisibilityDetector(
+                key: _sectionKeys['Projects']!,
+                onVisibilityChanged: (info) {
+                  if (info.visibleFraction > 0.5) {
+                    setState(() => _activeSection = 'Projects');
+                  }
+                },
+                child: const ProjectsSection(),
+              ),
+              VisibilityDetector(
+                key: _sectionKeys['Contact']!,
+                onVisibilityChanged: (info) {
+                  if (info.visibleFraction > 0.5) {
+                    setState(() => _activeSection = 'Contact');
+                  }
+                },
+                child: const ContactSection(),
+              ),
+              const FooterSection(),
+            ],
           ),
-          if (!isDesktop && _isMobileMenuOpen)
-            Positioned(
-              top: kToolbarHeight,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: const Text('Home'),
-                      onTap: () => _scrollToSection('Home'),
-                    ),
-                    ListTile(
-                      title: const Text('About'),
-                      onTap: () => _scrollToSection('About'),
-                    ),
-                    ListTile(
-                      title: const Text('Skills'),
-                      onTap: () => _scrollToSection('Skills'),
-                    ),
-                    ListTile(
-                      title: const Text('Experience'),
-                      onTap: () => _scrollToSection('Experience'),
-                    ),
-                    ListTile(
-                      title: const Text('Projects'),
-                      onTap: () => _scrollToSection('Projects'),
-                    ),
-                    ListTile(
-                      title: const Text('Contact'),
-                      onTap: () => _scrollToSection('Contact'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _downloadResume,
         icon: const Icon(Icons.download),
-        label: const Text('Download Resume'),
+        label: const Text('Resume'),
       ),
     );
+  }
+
+  Widget _buildDrawer() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
+
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    radius: 24,
+                    child: Icon(
+                      Icons.person,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      'Portfolio',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      themeProvider.isDarkMode
+                          ? Icons.light_mode
+                          : Icons.dark_mode,
+                    ),
+                    onPressed: () => themeProvider.toggleTheme(),
+                    tooltip:
+                        themeProvider.isDarkMode ? 'Light Mode' : 'Dark Mode',
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  for (final section in _sectionKeys.keys)
+                    ListTile(
+                      title: Text(section),
+                      selected: _activeSection == section,
+                      leading: _getIconForSection(section),
+                      onTap: () => _scrollToSection(section),
+                    ),
+                ],
+              ),
+            ),
+            const Divider(),
+            ListTile(
+              title: const Text('Download Resume'),
+              leading: const Icon(Icons.download),
+              onTap: () {
+                _downloadResume();
+                Navigator.of(context).pop();
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _getIconForSection(String section) {
+    IconData iconData;
+    switch (section) {
+      case 'Home':
+        iconData = Icons.home;
+        break;
+      case 'About':
+        iconData = Icons.person;
+        break;
+      case 'Skills':
+        iconData = Icons.code;
+        break;
+      case 'Experience':
+        iconData = Icons.work;
+        break;
+      case 'Projects':
+        iconData = Icons.app_shortcut;
+        break;
+      case 'Contact':
+        iconData = Icons.email;
+        break;
+      default:
+        iconData = Icons.arrow_forward;
+    }
+    return Icon(iconData);
   }
 }

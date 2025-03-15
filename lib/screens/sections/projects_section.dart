@@ -38,7 +38,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                 _buildCategoryFilters(context),
                 const SizedBox(height: 32),
                 if (isMobile)
-                  _buildProjectList(context, 1, _filteredProjects)
+                  _buildProjectList(context, 2, _filteredProjects)
                 else if (isTablet)
                   _buildProjectList(context, 2, _filteredProjects)
                 else
@@ -56,17 +56,28 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     double screenWidth = MediaQuery.of(context).size.width;
     // Calculate available width accounting for constraints and spacing
     double availableWidth = screenWidth > 1200 ? 1200 : screenWidth;
+
+    // Adjust spacing for smaller screens
+    final isMobile = ResponsiveBreakpoints.of(context).isMobile;
+    final spacing = isMobile ? 8.0 : 24.0;
+
     // Calculate card widths with proper spacing
-    double cardWidth = columns == 1
-        ? 320
-        : columns == 2
-            ? (availableWidth - 72) / 2 // Account for spacing between 2 cards
-            : (availableWidth - 96) / 3; // Account for spacing between 3 cards
+    double cardWidth;
+    if (isMobile) {
+      // For mobile, ensure cards fit properly with minimal spacing
+      cardWidth = (availableWidth - (spacing * (columns + 1))) / columns;
+    } else if (columns == 2) {
+      cardWidth =
+          (availableWidth - 72) / 2; // Account for spacing between 2 cards
+    } else {
+      cardWidth =
+          (availableWidth - 96) / 3; // Account for spacing between 3 cards
+    }
 
     return AnimationLimiter(
       child: Wrap(
-        spacing: 24,
-        runSpacing: 24,
+        spacing: spacing,
+        runSpacing: spacing,
         alignment: WrapAlignment.center,
         children: List.generate(projects.length, (index) {
           return AnimationConfiguration.staggeredGrid(
@@ -155,9 +166,13 @@ class _ProjectsSectionState extends State<ProjectsSection> {
   }
 
   Widget _buildProjectCard(BuildContext context, Map<String, dynamic> project) {
+    final isMobile = ResponsiveBreakpoints.of(context).isMobile;
+    final imageHeight =
+        isMobile ? 150.0 : 200.0; // Smaller image height on mobile
+
     return Card(
       elevation: 4,
-      margin: const EdgeInsets.all(8),
+      margin: EdgeInsets.all(isMobile ? 4 : 8), // Smaller margin on mobile
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
@@ -172,13 +187,13 @@ class _ProjectsSectionState extends State<ProjectsSection> {
               children: [
                 Image.network(
                   project['image'] as String,
-                  height: 200,
+                  height: imageHeight,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Container(
-                      height: 200,
+                      height: imageHeight,
                       width: double.infinity,
                       color: Colors.grey[200],
                       child: Center(
@@ -192,16 +207,18 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                       ),
                     );
                   },
-                  errorBuilder: (context, error, stackTrace) {
+                  errorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    // Properly typed error handler
                     return Container(
-                      height: 200,
+                      height: imageHeight,
                       width: double.infinity,
                       color: Colors.grey[200],
                       child: Center(
                         child: Icon(
                           Icons.broken_image_rounded,
                           color: Colors.grey[400],
-                          size: 50,
+                          size: isMobile ? 30 : 50,
                         ),
                       ),
                     );
@@ -252,58 +269,58 @@ class _ProjectsSectionState extends State<ProjectsSection> {
           ),
           // Project Info
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(isMobile ? 12 : 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 60,
+                  height: isMobile ? 50 : 60, // Smaller height on mobile
                   child: Text(
                     project['description'] as String,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           height: 1.4,
                           color: ThemeConstants.textLight,
+                          fontSize:
+                              isMobile ? 12 : 14, // Smaller font on mobile
                         ),
-                    maxLines: 3,
+                    maxLines: isMobile ? 2 : 3, // Fewer lines on mobile
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: isMobile ? 12 : 16),
                 // Technology tags
                 Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
+                  spacing: isMobile ? 4 : 6,
+                  runSpacing: isMobile ? 4 : 6,
                   children: [
                     for (final tech in project['technologies'] as List<dynamic>)
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: isMobile ? 8 : 10,
+                            vertical: isMobile ? 4 : 6),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.1),
+                          color: Color(0xFF007BFF),
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
                           tech as String,
                           style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: isMobile ? 10 : 12,
+                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: isMobile ? 12 : 16),
                 // App store and action buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Wrap(
-                      spacing: 8,
+                      spacing: isMobile ? 4 : 8,
                       children: [
                         if (project.containsKey('playStore'))
                           InkWell(
@@ -385,14 +402,14 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                             child: Tooltip(
                               message: 'App Store',
                               child: Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: EdgeInsets.all(isMobile ? 6 : 8),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[100],
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Icon(
                                   FontAwesomeIcons.appStore,
-                                  size: 20,
+                                  size: isMobile ? 16 : 20,
                                   color: Colors.blue[700],
                                 ),
                               ),
@@ -411,7 +428,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                             child: Tooltip(
                               message: 'View Project',
                               child: Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: EdgeInsets.all(isMobile ? 6 : 8),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -421,7 +438,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                                 ),
                                 child: Icon(
                                   FontAwesomeIcons.arrowUpRightFromSquare,
-                                  size: 18,
+                                  size: isMobile ? 14 : 18,
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
@@ -429,7 +446,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                           ),
                         if (project.containsKey('githubUrl'))
                           Padding(
-                            padding: const EdgeInsets.only(left: 8),
+                            padding: EdgeInsets.only(left: isMobile ? 4 : 8),
                             child: InkWell(
                               onTap: () {
                                 UrlUtils.openUrl(
@@ -438,14 +455,14 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                               child: Tooltip(
                                 message: 'Source Code',
                                 child: Container(
-                                  padding: const EdgeInsets.all(8),
+                                  padding: EdgeInsets.all(isMobile ? 6 : 8),
                                   decoration: BoxDecoration(
                                     color: Colors.grey[800],
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     FontAwesomeIcons.github,
-                                    size: 18,
+                                    size: isMobile ? 14 : 18,
                                     color: Colors.white,
                                   ),
                                 ),

@@ -24,21 +24,6 @@ class FooterSection extends StatelessWidget {
       padding: padding,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (final social in PortfolioData.socialLinks)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: SocialIcon(
-                    platform: social['name'] as String,
-                    url: social['url'] as String,
-                    size: ResponsiveUtils.getIconSize(context, 20),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 24),
           Text(
             '© ${DateTime.now().year} ${PortfolioData.name2}. All rights reserved.',
             style: Theme.of(context).textTheme.bodySmall,

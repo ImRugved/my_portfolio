@@ -33,6 +33,11 @@ class AboutSection extends StatelessWidget {
                   right: isMobile ? 0 : 40, bottom: isMobile ? 40 : 0),
               alignment: Alignment.center,
               child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: isMobile
+                      ? MediaQuery.of(context).size.width * 0.85
+                      : double.infinity,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(40),
                   border: Border.all(
@@ -55,7 +60,9 @@ class AboutSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(38),
                   child: Image.asset(
                     'assets/images/about.jpg',
-                    errorBuilder: (context, error, stackTrace) {
+                    fit: isMobile ? BoxFit.contain : null,
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
                       return Container(
                         width: 300,
                         height: 200,

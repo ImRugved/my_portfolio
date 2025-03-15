@@ -127,20 +127,18 @@ class HeroSection extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 32),
-                  Row(
-                    mainAxisAlignment: isMobile
-                        ? MainAxisAlignment.center
-                        : MainAxisAlignment.start,
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    alignment:
+                        isMobile ? WrapAlignment.center : WrapAlignment.start,
                     children: [
                       for (final social in PortfolioData.socialLinks)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: SocialIcon(
-                            platform: social['name'] as String,
-                            url: social['url'] as String,
-                            size: app_responsive.ResponsiveUtils.getIconSize(
-                                context, 24),
-                          ),
+                        SocialIcon(
+                          platform: social['name'] as String,
+                          url: social['url'] as String,
+                          size: app_responsive.ResponsiveUtils.getIconSize(
+                              context, 24),
                         ),
                     ],
                   ),
@@ -157,17 +155,17 @@ class HeroSection extends StatelessWidget {
                     // Background blur circle - larger than the image
                     Container(
                       width: (isMobile
-                              ? 300
+                              ? MediaQuery.of(context).size.width * 0.4
                               : isTablet
                                   ? 350
                                   : 450) +
-                          20,
+                          12, // Smaller offset for mobile
                       height: (isMobile
-                              ? 300
+                              ? MediaQuery.of(context).size.width * 0.4
                               : isTablet
                                   ? 350
                                   : 450) +
-                          20,
+                          12, // Smaller offset for mobile
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.transparent,
@@ -177,8 +175,8 @@ class HeroSection extends StatelessWidget {
                                 .colorScheme
                                 .primary
                                 .withOpacity(0.1),
-                            blurRadius: 30,
-                            spreadRadius: 10,
+                            blurRadius: 20, // Reduced blur
+                            spreadRadius: 5, // Reduced spread
                           ),
                         ],
                       ),
@@ -197,12 +195,14 @@ class HeroSection extends StatelessWidget {
                     // Main image container with enhanced shadow effect
                     Container(
                       width: isMobile
-                          ? 300
+                          ? MediaQuery.of(context).size.width *
+                              0.4 // 40% of screen width for very small screens
                           : isTablet
                               ? 350
                               : 450,
                       height: isMobile
-                          ? 300
+                          ? MediaQuery.of(context).size.width *
+                              0.4 // Keep aspect ratio 1:1
                           : isTablet
                               ? 350
                               : 450,
@@ -212,7 +212,7 @@ class HeroSection extends StatelessWidget {
                           // Inner shadow
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
-                            blurRadius: 25,
+                            blurRadius: 15,
                             spreadRadius: 1,
                           ),
                           // Outer glow
@@ -220,8 +220,8 @@ class HeroSection extends StatelessWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.4),
-                            blurRadius: 20,
+                                .withOpacity(0.3),
+                            blurRadius: 12,
                             spreadRadius: 0,
                           ),
                         ],
@@ -230,13 +230,14 @@ class HeroSection extends StatelessWidget {
                         child: Image.asset(
                           'assets/images/profile.png',
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            // Silent error handling without print statements
+                          errorBuilder: (BuildContext context, Object error,
+                              StackTrace? stackTrace) {
+                            // Properly typed error handler
                             return Container(
                               color: Colors.grey[300],
                               child: Icon(
                                 Icons.person,
-                                size: isMobile ? 100 : 150,
+                                size: isMobile ? 50 : 150,
                                 color: Colors.grey[600],
                               ),
                             );
@@ -258,25 +259,25 @@ class HeroSection extends StatelessWidget {
                     // Outline highlight circle
                     Container(
                       width: (isMobile
-                              ? 300
+                              ? MediaQuery.of(context).size.width * 0.4
                               : isTablet
                                   ? 350
                                   : 450) +
-                          10,
+                          8, // Smaller offset for mobile
                       height: (isMobile
-                              ? 300
+                              ? MediaQuery.of(context).size.width * 0.4
                               : isTablet
                                   ? 350
                                   : 450) +
-                          10,
+                          8, // Smaller offset for mobile
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.3),
-                          width: 2,
+                              .withOpacity(0.2),
+                          width: 1.5, // Thinner border for mobile
                         ),
                       ),
                     ).animate(

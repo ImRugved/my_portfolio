@@ -19,11 +19,11 @@ class ResponsiveUtils {
 
   static EdgeInsets getHorizontalPadding(BuildContext context) {
     if (isMobile(context)) {
-      return const EdgeInsets.symmetric(horizontal: 16);
+      return const EdgeInsets.symmetric(horizontal: 8);
     } else if (isTablet(context)) {
-      return const EdgeInsets.symmetric(horizontal: 48);
+      return const EdgeInsets.symmetric(horizontal: 24);
     } else {
-      return const EdgeInsets.symmetric(horizontal: 80);
+      return const EdgeInsets.symmetric(horizontal: 40);
     }
   }
 
