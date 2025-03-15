@@ -159,7 +159,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       elevation: 4,
       margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
         children: [
           // Project Image with Overlay
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: Stack(
               children: [
                 Image.network(

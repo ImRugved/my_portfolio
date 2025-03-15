@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeProvider(),
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) => MaterialApp(
-          title: 'Rugved Patil | Portfolio',
+          title: 'Rugved | Portfolio',
           debugShowCheckedModeBanner: false,
           theme: ThemeProvider().theme,
           darkTheme: ThemeProvider().theme,

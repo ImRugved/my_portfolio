@@ -34,7 +34,11 @@ class AboutSection extends StatelessWidget {
                 maxWidth: isMobile ? double.infinity : 500,
               ),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(40),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  width: 2,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color:
@@ -48,10 +52,10 @@ class AboutSection extends StatelessWidget {
                 aspectRatio:
                     16 / 9, // Using a common aspect ratio for the container
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(40),
                   child: Image.asset(
                     'assets/images/about.jpg',
-                    fit: BoxFit.contain,
+                    fit: BoxFit.scaleDown,
                     width: double.infinity,
                     height: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
