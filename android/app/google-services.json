@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "513914181670",
+    "firebase_url": "https://mounarchtech-ac3b9-default-rtdb.firebaseio.com",
+    "project_id": "mounarchtech-ac3b9",
+    "storage_bucket": "mounarchtech-ac3b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513914181670:android:e1c0fc07a804dedfb2aee7",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513914181670-4dilo7trv0uso4o4phgl5lqpb7n2uk90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzppyk8HYetSsbvPhFfJG793njHiAtwNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513914181670-4dilo7trv0uso4o4phgl5lqpb7n2uk90.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "513914181670-5r7n8ce1bvadgc7ghrfu06kdgo2n0cqb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mounarch"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513914181670:android:fe63280331ffef08b2aee7",
+        "android_client_info": {
+          "package_name": "com.example.rugved_portfolio_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513914181670-4dilo7trv0uso4o4phgl5lqpb7n2uk90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzppyk8HYetSsbvPhFfJG793njHiAtwNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513914181670-4dilo7trv0uso4o4phgl5lqpb7n2uk90.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "513914181670-5r7n8ce1bvadgc7ghrfu06kdgo2n0cqb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mounarch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

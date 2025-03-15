@@ -40,7 +40,8 @@ class HeaderSection extends StatelessWidget implements PreferredSizeWidget {
                     ? 8
                     : 12,
             vertical: 8),
-        width: isMobile ? 200 : 420,
+        width:
+            isMobile ? 200 : screenWidth * 0.3, // Make title width responsive
         child: DefaultTextStyle(
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.bold,
@@ -78,46 +79,56 @@ class HeaderSection extends StatelessWidget implements PreferredSizeWidget {
           : null,
       actions: [
         if (!isMobile)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final section in sections)
-                TextButton(
-                  onPressed: () => onSectionSelected(section),
-                  style: TextButton.styleFrom(
-                    foregroundColor: activeSection == section
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).textTheme.bodyMedium?.color,
-                    textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: activeSection == section
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isTablet
-                          ? 10
-                          : isMobile
-                              ? 8
-                              : 14,
-                      vertical: 8,
-                    ),
-                  ),
-                  child: Text(
-                    section,
-                    style: TextStyle(
-                      fontSize: isTablet ? 12 : 16,
-                    ),
-                  ),
-                ).animate(effects: AnimationUtils.fadeSlideUp),
-            ],
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: screenWidth * 0.6),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (final section in sections)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: TextButton(
+                          onPressed: () => onSectionSelected(section),
+                          style: TextButton.styleFrom(
+                            foregroundColor: activeSection == section
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).textTheme.bodyMedium?.color,
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  fontWeight: activeSection == section
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isTablet ? 6 : 8,
+                              vertical: 6,
+                            ),
+                          ),
+                          child: Text(
+                            section,
+                            style: TextStyle(
+                              fontSize: isTablet ? 12 : 14,
+                            ),
+                          ),
+                        ).animate(effects: AnimationUtils.fadeSlideUp),
+                      ),
+                  ],
+                ),
+              ),
+            ),
           ),
         IconButton(
           padding: EdgeInsets.symmetric(
               horizontal: isTablet
-                  ? 10
+                  ? 8
                   : isMobile
                       ? 8
-                      : 12),
+                      : 10),
           icon: Icon(
             themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
           ),
@@ -126,6 +137,101 @@ class HeaderSection extends StatelessWidget implements PreferredSizeWidget {
         ).animate(effects: AnimationUtils.scaleIn),
       ],
     );
+    // AppBar(
+    //   title: Container(
+    //     padding: EdgeInsets.symmetric(
+    //         horizontal: isTablet
+    //             ? 10
+    //             : isMobile
+    //                 ? 8
+    //                 : 12,
+    //         vertical: 8),
+    //     width: isMobile ? 200 : 420,
+    //     child: DefaultTextStyle(
+    //       style: Theme.of(context).textTheme.titleMedium!.copyWith(
+    //             fontWeight: FontWeight.bold,
+    //             color: Theme.of(context).colorScheme.secondary,
+    //             overflow: TextOverflow.ellipsis,
+    //             fontSize: isMobile ? 16 : 20,
+    //           ),
+    //       maxLines: 1,
+    //       child: AnimatedTextKit(
+    //         animatedTexts: PortfolioData.headings.map((heading) {
+    //           return TypewriterAnimatedText(
+    //             heading,
+    //             speed: const Duration(milliseconds: 80),
+    //             cursor: '...',
+    //           );
+    //         }).toList(),
+    //         repeatForever: true,
+    //         pause: const Duration(seconds: 3),
+    //         displayFullTextOnTap: true,
+    //         isRepeatingAnimation: true,
+    //       ),
+    //     ),
+    //   ).animate(effects: AnimationUtils.scaleIn),
+    //   titleSpacing: 8,
+    //   centerTitle: false,
+    //   leading: isMobile
+    //       ? IconButton(
+    //           icon: const Icon(Icons.menu),
+    //           onPressed: () {
+    //             if (scaffoldKey?.currentState != null) {
+    //               scaffoldKey!.currentState!.openDrawer();
+    //             }
+    //           },
+    //         )
+    //       : null,
+    //   actions: [
+    //     if (!isMobile)
+    //       Row(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //           for (final section in sections)
+    //             TextButton(
+    //               onPressed: () => onSectionSelected(section),
+    //               style: TextButton.styleFrom(
+    //                 foregroundColor: activeSection == section
+    //                     ? Theme.of(context).colorScheme.primary
+    //                     : Theme.of(context).textTheme.bodyMedium?.color,
+    //                 textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+    //                       fontWeight: activeSection == section
+    //                           ? FontWeight.bold
+    //                           : FontWeight.normal,
+    //                     ),
+    //                 padding: EdgeInsets.symmetric(
+    //                   horizontal: isTablet
+    //                       ? 10
+    //                       : isMobile
+    //                           ? 8
+    //                           : 14,
+    //                   vertical: 8,
+    //                 ),
+    //               ),
+    //               child: Text(
+    //                 section,
+    //                 style: TextStyle(
+    //                   fontSize: isTablet ? 12 : 16,
+    //                 ),
+    //               ),
+    //             ).animate(effects: AnimationUtils.fadeSlideUp),
+    //         ],
+    //       ),
+    //     IconButton(
+    //       padding: EdgeInsets.symmetric(
+    //           horizontal: isTablet
+    //               ? 10
+    //               : isMobile
+    //                   ? 8
+    //                   : 12),
+    //       icon: Icon(
+    //         themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+    //       ),
+    //       onPressed: () => themeProvider.toggleTheme(),
+    //       tooltip: themeProvider.isDarkMode ? 'Light Mode' : 'Dark Mode',
+    //     ).animate(effects: AnimationUtils.scaleIn),
+    //   ],
+    // );
   }
 
   // Helper method to get icon for each section

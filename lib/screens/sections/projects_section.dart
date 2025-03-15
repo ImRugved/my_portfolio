@@ -737,14 +737,19 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                                     },
                                     icon: Icon(
                                       FontAwesomeIcons.googlePlay,
-                                      size: 18,
+                                      size: isMobile ? 16 : 18,
                                     ),
-                                    label: const Text('Play Store'),
+                                    label: Text(
+                                      'Play Store',
+                                      style: TextStyle(
+                                          fontSize: isMobile ? 12 : 16),
+                                    ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.green[700],
                                       foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: isMobile ? 12 : 16,
+                                          vertical: 12),
                                     ),
                                   ),
                                 const SizedBox(width: 12),
@@ -760,14 +765,19 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                                     },
                                     icon: Icon(
                                       FontAwesomeIcons.appStore,
-                                      size: 18,
+                                      size: isMobile ? 16 : 20,
                                     ),
-                                    label: const Text('App Store'),
+                                    label: Text(
+                                      'App Store',
+                                      style: TextStyle(
+                                          fontSize: isMobile ? 12 : 16),
+                                    ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.blue[700],
                                       foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: isMobile ? 12 : 16,
+                                          vertical: 12),
                                     ),
                                   ),
                               ],
