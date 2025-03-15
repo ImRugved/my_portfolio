@@ -170,313 +170,358 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     final imageHeight =
         isMobile ? 150.0 : 200.0; // Smaller image height on mobile
 
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.all(isMobile ? 4 : 8), // Smaller margin on mobile
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Project Image with Overlay
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            child: Stack(
-              children: [
-                Image.network(
-                  project['image'] as String,
-                  height: imageHeight,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      height: imageHeight,
-                      width: double.infinity,
-                      color: Colors.grey[200],
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Theme.of(context).colorScheme.primary,
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
+    return InkWell(
+      onTap: () => _showProjectDetailsDialog(context, project),
+      borderRadius: BorderRadius.circular(24),
+      child: Card(
+        elevation: 4,
+        margin: EdgeInsets.all(isMobile ? 4 : 8), // Smaller margin on mobile
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Project Image with Overlay
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(24)),
+              child: Stack(
+                children: [
+                  Image.network(
+                    project['image'] as String,
+                    height: imageHeight,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: imageHeight,
+                        width: double.infinity,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.primary,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (BuildContext context, Object error,
-                      StackTrace? stackTrace) {
-                    // Properly typed error handler
-                    return Container(
-                      height: imageHeight,
-                      width: double.infinity,
-                      color: Colors.grey[200],
-                      child: Center(
-                        child: Icon(
-                          Icons.broken_image_rounded,
-                          color: Colors.grey[400],
-                          size: isMobile ? 30 : 50,
+                      );
+                    },
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      // Properly typed error handler
+                      return Container(
+                        height: imageHeight,
+                        width: double.infinity,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: Icon(
+                            Icons.broken_image_rounded,
+                            color: Colors.grey[400],
+                            size: isMobile ? 30 : 50,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.7),
-                        ],
-                        stops: const [0.6, 1.0],
+                      );
+                    },
+                  ),
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.7),
+                          ],
+                          stops: const [0.6, 1.0],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                    child: Text(
-                      project['title'] as String,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              project['title'] as String,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Tooltip(
+                            message: 'View details',
+                            child: Icon(
+                              Icons.info_outline,
+                              color: Colors.white,
+                              size: 16,
+                            ),
                           ),
                         ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Project Info
-          Padding(
-            padding: EdgeInsets.all(isMobile ? 12 : 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: isMobile ? 50 : 60, // Smaller height on mobile
-                  child: Text(
-                    project['description'] as String,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          height: 1.4,
-                          color: ThemeConstants.textLight,
-                          fontSize:
-                              isMobile ? 12 : 14, // Smaller font on mobile
-                        ),
-                    maxLines: isMobile ? 2 : 3, // Fewer lines on mobile
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                SizedBox(height: isMobile ? 12 : 16),
-                // Technology tags
-                Wrap(
-                  spacing: isMobile ? 4 : 6,
-                  runSpacing: isMobile ? 4 : 6,
-                  children: [
-                    for (final tech in project['technologies'] as List<dynamic>)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 8 : 10,
-                            vertical: isMobile ? 4 : 6),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF007BFF),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Text(
-                          tech as String,
-                          style: TextStyle(
-                            fontSize: isMobile ? 10 : 12,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                SizedBox(height: isMobile ? 12 : 16),
-                // App store and action buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Wrap(
-                      spacing: isMobile ? 4 : 8,
+            // Project Info
+            Padding(
+              padding: EdgeInsets.all(isMobile ? 12 : 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: isMobile ? 50 : 60, // Smaller height on mobile
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (project.containsKey('playStore'))
-                          InkWell(
-                            onTap: () {
-                              if (project['playStore'] != "") {
-                                UrlUtils.openUrl(
-                                    project['playStore'] as String);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'This app will be available on Google Play Store soon. Thank you for your patience.',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    backgroundColor: Colors.blue.shade800,
-                                    duration: const Duration(seconds: 5),
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    action: SnackBarAction(
-                                      label: 'CLOSE',
-                                      textColor: Colors.white,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                      },
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                            child: Tooltip(
-                              message: 'Play Store',
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[100],
-                                  borderRadius: BorderRadius.circular(8),
+                        Expanded(
+                          child: Text(
+                            project['description'] as String,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  height: 1.4,
+                                  color: ThemeConstants.textLight,
+                                  fontSize: isMobile
+                                      ? 12
+                                      : 14, // Smaller font on mobile
                                 ),
-                                child: Icon(
-                                  FontAwesomeIcons.googlePlay,
-                                  size: 20,
-                                  color: Colors.green[700],
-                                ),
-                              ),
-                            ),
+                            maxLines: isMobile ? 2 : 3, // Fewer lines on mobile
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        if (project.containsKey('appStore'))
-                          InkWell(
-                            onTap: () {
-                              if (project['appStore'] != "") {
-                                UrlUtils.openUrl(project['appStore'] as String);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'This app will be available on App Store soon. Thank you for your patience.',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    backgroundColor: Colors.blue.shade800,
-                                    duration: const Duration(seconds: 5),
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    action: SnackBarAction(
-                                      label: 'CLOSE',
-                                      textColor: Colors.white,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                      },
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                            child: Tooltip(
-                              message: 'App Store',
-                              child: Container(
-                                padding: EdgeInsets.all(isMobile ? 6 : 8),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[100],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  FontAwesomeIcons.appStore,
-                                  size: isMobile ? 16 : 20,
-                                  color: Colors.blue[700],
-                                ),
-                              ),
-                            ),
+                        ),
+                        Text(
+                          'Tap for more details',
+                          style: TextStyle(
+                            fontSize: isMobile ? 10 : 11,
+                            color: Theme.of(context).colorScheme.primary,
+                            fontStyle: FontStyle.italic,
                           ),
+                        ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        if (project.containsKey('liveUrl') &&
-                            project['liveUrl'] != '#')
-                          InkWell(
-                            onTap: () {
-                              UrlUtils.openUrl(project['liveUrl'] as String);
-                            },
-                            child: Tooltip(
-                              message: 'View Project',
-                              child: Container(
-                                padding: EdgeInsets.all(isMobile ? 6 : 8),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  FontAwesomeIcons.arrowUpRightFromSquare,
-                                  size: isMobile ? 14 : 18,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
+                  ),
+                  SizedBox(height: isMobile ? 12 : 16),
+                  // Technology tags
+                  Wrap(
+                    spacing: isMobile ? 4 : 6,
+                    runSpacing: isMobile ? 4 : 6,
+                    children: [
+                      for (final tech
+                          in project['technologies'] as List<dynamic>)
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: isMobile ? 8 : 10,
+                              vertical: isMobile ? 4 : 6),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF007BFF),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            tech as String,
+                            style: TextStyle(
+                              fontSize: isMobile ? 10 : 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        if (project.containsKey('githubUrl'))
-                          Padding(
-                            padding: EdgeInsets.only(left: isMobile ? 4 : 8),
-                            child: InkWell(
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: isMobile ? 12 : 16),
+                  // App store and action buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Wrap(
+                        spacing: isMobile ? 4 : 8,
+                        children: [
+                          if (project.containsKey('playStore'))
+                            InkWell(
                               onTap: () {
-                                UrlUtils.openUrl(
-                                    project['githubUrl'] as String);
+                                if (project['playStore'] != "") {
+                                  UrlUtils.openUrl(
+                                      project['playStore'] as String);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'This app will be available on Google Play Store soon. Thank you for your patience.',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      backgroundColor: Colors.blue.shade800,
+                                      duration: const Duration(seconds: 5),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      action: SnackBarAction(
+                                        label: 'CLOSE',
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                }
                               },
                               child: Tooltip(
-                                message: 'Source Code',
+                                message: 'Play Store',
                                 child: Container(
-                                  padding: EdgeInsets.all(isMobile ? 6 : 8),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[800],
+                                    color: Colors.grey[100],
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(
-                                    FontAwesomeIcons.github,
-                                    size: isMobile ? 14 : 18,
-                                    color: Colors.white,
+                                    FontAwesomeIcons.googlePlay,
+                                    size: 20,
+                                    color: Colors.green[700],
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                          if (project.containsKey('appStore'))
+                            InkWell(
+                              onTap: () {
+                                if (project['appStore'] != "") {
+                                  UrlUtils.openUrl(
+                                      project['appStore'] as String);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'This app will be available on App Store soon. Thank you for your patience.',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      backgroundColor: Colors.blue.shade800,
+                                      duration: const Duration(seconds: 5),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      action: SnackBarAction(
+                                        label: 'CLOSE',
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Tooltip(
+                                message: 'App Store',
+                                child: Container(
+                                  padding: EdgeInsets.all(isMobile ? 6 : 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    FontAwesomeIcons.appStore,
+                                    size: isMobile ? 16 : 20,
+                                    color: Colors.blue[700],
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          if (project.containsKey('liveUrl') &&
+                              project['liveUrl'] != '#')
+                            InkWell(
+                              onTap: () {
+                                UrlUtils.openUrl(project['liveUrl'] as String);
+                              },
+                              child: Tooltip(
+                                message: 'View Project',
+                                child: Container(
+                                  padding: EdgeInsets.all(isMobile ? 6 : 8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    FontAwesomeIcons.arrowUpRightFromSquare,
+                                    size: isMobile ? 14 : 18,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (project.containsKey('githubUrl'))
+                            Padding(
+                              padding: EdgeInsets.only(left: isMobile ? 4 : 8),
+                              child: InkWell(
+                                onTap: () {
+                                  UrlUtils.openUrl(
+                                      project['githubUrl'] as String);
+                                },
+                                child: Tooltip(
+                                  message: 'Source Code',
+                                  child: Container(
+                                    padding: EdgeInsets.all(isMobile ? 6 : 8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[800],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      FontAwesomeIcons.github,
+                                      size: isMobile ? 14 : 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -488,5 +533,256 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     return PortfolioData.projects.where((project) {
       return project['category'] == _selectedCategory;
     }).toList();
+  }
+
+  void _showProjectDetailsDialog(
+      BuildContext context, Map<String, dynamic> project) {
+    // Capture MediaQuery values early to avoid context issues after disposal
+    final screenSize = MediaQuery.of(context).size;
+    final isMobile = screenSize.width <
+        768; // Manually determine instead of using ResponsiveBreakpoints
+    final dialogWidth = isMobile ? screenSize.width * 0.95 : 600.0;
+    final dialogHeight = screenSize.height * 0.8;
+
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allow clicking outside to dismiss
+      builder: (BuildContext dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: dialogWidth,
+            maxHeight: dialogHeight,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Dialog header with close button
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(24)),
+                    child: Image.network(
+                      project['image'] as String,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return Container(
+                          height: 200,
+                          width: double.infinity,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image_rounded,
+                              color: Colors.grey[400],
+                              size: 50,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  // Gradient overlay for image
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(24)),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.7),
+                          ],
+                          stops: const [0.6, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Project title
+                  Positioned(
+                    bottom: 16,
+                    left: 16,
+                    right: 56,
+                    child: Text(
+                      project['title'] as String,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.5),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Close button
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black.withOpacity(0.5),
+                      radius: 18,
+                      child: IconButton(
+                        icon: const Icon(Icons.close, size: 18),
+                        color: Colors.white,
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Dialog content
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Full description
+                      Text(
+                        'Description',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        project['description'] as String,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              height: 1.6,
+                              color: ThemeConstants.textLight,
+                            ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Technologies used
+                      Text(
+                        'Technologies Used',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final tech
+                              in project['technologies'] as List<dynamic>)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF007BFF),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Text(
+                                tech as String,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // App store links
+                      if (project.containsKey('playStore') ||
+                          project.containsKey('appStore'))
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Available On',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                if (project.containsKey('playStore'))
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      if (project['playStore'] != "") {
+                                        UrlUtils.openUrl(
+                                            project['playStore'] as String);
+                                      }
+                                      Navigator.of(dialogContext)
+                                          .pop(); // Close dialog after action
+                                    },
+                                    icon: Icon(
+                                      FontAwesomeIcons.googlePlay,
+                                      size: 18,
+                                    ),
+                                    label: const Text('Play Store'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green[700],
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                    ),
+                                  ),
+                                const SizedBox(width: 12),
+                                if (project.containsKey('appStore'))
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      if (project['appStore'] != "") {
+                                        UrlUtils.openUrl(
+                                            project['appStore'] as String);
+                                      }
+                                      Navigator.of(dialogContext)
+                                          .pop(); // Close dialog after action
+                                    },
+                                    icon: Icon(
+                                      FontAwesomeIcons.appStore,
+                                      size: 18,
+                                    ),
+                                    label: const Text('App Store'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[700],
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

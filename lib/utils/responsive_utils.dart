@@ -23,7 +23,7 @@ class ResponsiveUtils {
     } else if (isTablet(context)) {
       return const EdgeInsets.symmetric(horizontal: 24);
     } else {
-      return const EdgeInsets.symmetric(horizontal: 40);
+      return const EdgeInsets.symmetric(horizontal: 32);
     }
   }
 
@@ -33,7 +33,7 @@ class ResponsiveUtils {
     } else if (isTablet(context)) {
       return const EdgeInsets.symmetric(vertical: 32);
     } else {
-      return const EdgeInsets.symmetric(vertical: 48);
+      return const EdgeInsets.symmetric(vertical: 40);
     }
   }
 

@@ -32,13 +32,21 @@ class HeaderSection extends StatelessWidget implements PreferredSizeWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return AppBar(
-      title: SizedBox(
-        width: isMobile ? 200 : 300,
+      title: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: isTablet
+                ? 10
+                : isMobile
+                    ? 8
+                    : 12,
+            vertical: 8),
+        width: isMobile ? 200 : 420,
         child: DefaultTextStyle(
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.secondary,
                 overflow: TextOverflow.ellipsis,
+                fontSize: isMobile ? 16 : 20,
               ),
           maxLines: 1,
           child: AnimatedTextKit(
@@ -86,20 +94,30 @@ class HeaderSection extends StatelessWidget implements PreferredSizeWidget {
                               : FontWeight.normal,
                         ),
                     padding: EdgeInsets.symmetric(
-                      horizontal: isTablet ? 8 : 12,
+                      horizontal: isTablet
+                          ? 10
+                          : isMobile
+                              ? 8
+                              : 14,
                       vertical: 8,
                     ),
                   ),
                   child: Text(
                     section,
                     style: TextStyle(
-                      fontSize: isTablet ? 12 : 14,
+                      fontSize: isTablet ? 12 : 16,
                     ),
                   ),
                 ).animate(effects: AnimationUtils.fadeSlideUp),
             ],
           ),
         IconButton(
+          padding: EdgeInsets.symmetric(
+              horizontal: isTablet
+                  ? 10
+                  : isMobile
+                      ? 8
+                      : 12),
           icon: Icon(
             themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
           ),
