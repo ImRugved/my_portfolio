@@ -50,7 +50,7 @@ class HeroSection extends StatelessWidget {
                   ).animate(effects: AnimationUtils.fadeSlideUp),
                   const SizedBox(height: 8),
                   Text(
-                    PortfolioData.name,
+                    PortfolioData.name2,
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: app_responsive.ResponsiveUtils.getFontSize(
@@ -103,6 +103,7 @@ class HeroSection extends StatelessWidget {
                         text: 'Hire Me',
                         onPressed: () => UrlUtils.scrollToSection('contact'),
                         icon: Icons.person_add,
+                        color: Colors.white,
                       ),
                       CustomButton(
                         text: 'View Projects',

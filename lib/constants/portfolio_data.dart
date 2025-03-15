@@ -1,5 +1,6 @@
 class PortfolioData {
-  static const String name = 'Rugved Belkundkar';
+  static const String name = 'Personal Portfolio';
+  static const String name2 = 'Rugved Belkundkar';
   static const String title = 'Senior Flutter Developer';
   static const String email = 'rugvedbelkundkar@gmail.com';
   static const String phone = '+91 9545724774';
@@ -10,8 +11,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
 
   static const List<String> roles = [
     'Senior Flutter Developer',
-    'Mobile App Specialist',
-    'Cross-Platform Developer',
+    'Mobile Application Developer',
+    'Cross-Platform App Developer',
   ];
 
   static const List<Map<String, dynamic>> socialLinks = [
@@ -85,9 +86,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'image': 'https://cdn-icons-png.flaticon.com/512/2382/2382461.png',
       'technologies': ['Flutter', 'Firebase', 'Web View', 'GetX'],
       'liveUrl': '#',
-      'playStore':
-          'https://play.google.com/store/apps/details?id=com.example.coretext',
-      'appStore': 'https://apps.apple.com/app/id123456789',
+      'playStore': '',
+      'appStore': '',
       'category': 'healthcare',
     },
     {
@@ -97,9 +97,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'image': 'https://cdn-icons-png.flaticon.com/512/2436/2436874.png',
       'technologies': ['Flutter', 'Razorpay', 'Firebase'],
       'liveUrl': '#',
-      'playStore':
-          'https://play.google.com/store/apps/details?id=com.example.indrayani',
-      'appStore': 'https://apps.apple.com/app/id223456789',
+      'playStore': '',
+      'appStore': '',
       'category': 'education',
     },
     {
@@ -109,9 +108,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'image': 'https://cdn-icons-png.flaticon.com/512/2906/2906274.png',
       'technologies': ['Flutter', 'Firebase', 'Location'],
       'liveUrl': '#',
-      'playStore':
-          'https://play.google.com/store/apps/details?id=com.example.worksjoy',
-      'appStore': 'https://apps.apple.com/app/id987654321',
+      'playStore': '',
+      'appStore': '',
       'category': 'management',
     },
     {
@@ -122,8 +120,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'technologies': ['Flutter', 'Firebase', 'Real-time'],
       'liveUrl': '#',
       'playStore':
-          'https://play.google.com/store/apps/details?id=com.example.nishchinta',
-      'appStore': 'https://apps.apple.com/app/id323456789',
+          'https://play.google.com/store/apps/details?id=com.daccess.nishintacms&pli=1',
+      'appStore': 'https://apps.apple.com/us/app/annasree/id6698878410',
       'category': 'management',
     },
     {
@@ -143,8 +141,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'technologies': ['Flutter', 'Real-time', 'Scheduling'],
       'liveUrl': '#',
       'playStore':
-          'https://play.google.com/store/apps/details?id=com.example.allevizmeeting',
-      'appStore': 'https://apps.apple.com/app/id523456789',
+          'https://play.google.com/apps/test/RQ9K_bqHUjI/ahAO29uNSvL9nia2sOgFiFsdMQEUAQE1txF36EQUyjIIY_R5G_vkN9FmUehT5y6aFkBY9Fz78CtBwP4dN7YO1P9TaX',
+      'appStore': '',
       'category': 'utility',
     },
     {
@@ -155,8 +153,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'technologies': ['Flutter', 'REST API', 'PDF'],
       'liveUrl': '#',
       'playStore':
-          'https://play.google.com/store/apps/details?id=com.example.sitesurvey',
-      'appStore': 'https://apps.apple.com/app/id623456789',
+          'https://play.google.com/store/apps/details?id=com.survey.siteSurvey',
+      'appStore': 'https://apps.apple.com/us/app/site-survey/id6523421935',
       'category': 'utility',
     },
   ];

@@ -20,8 +20,8 @@ class ExperienceSection extends StatelessWidget {
       backgroundColor: isDarkMode ? ThemeConstants.dark : ThemeConstants.light,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: isMobile ? 0 : 16),
-        child: Column(
-          children: [
+      child: Column(
+        children: [
             _buildTimeline(context, isMobile),
           ],
         ),
@@ -63,68 +63,68 @@ class ExperienceSection extends StatelessWidget {
           if (!isMobile) _buildTimelineDot(context, isLast),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
+        boxShadow: [
+          BoxShadow(
                     color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
+            blurRadius: 10,
                     offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                               title,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleLarge
                                   ?.copyWith(
-                                    fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                                     color:
                                         Theme.of(context).colorScheme.primary,
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
                               "$company, $location",
                               style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ],
-                        ),
-                      ),
+                    ),
+                  ],
+                ),
+              ),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
                           vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
+          ),
+            decoration: BoxDecoration(
                           color: Theme.of(context)
                               .colorScheme
                               .primary
                               .withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          duration,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              duration,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+              ),
+            ),
+          ),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -135,9 +135,9 @@ class ExperienceSection extends StatelessWidget {
                             for (var item in description)
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                                     Container(
                                       margin: const EdgeInsets.only(top: 8),
                                       width: 6,
@@ -150,8 +150,8 @@ class ExperienceSection extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
+                    Expanded(
+                      child: Text(
                                         item as String,
                                         style: Theme.of(context)
                                             .textTheme
@@ -171,11 +171,11 @@ class ExperienceSection extends StatelessWidget {
                           ),
                         ),
                 ],
-              ),
-            ),
-          ),
-        ],
-      ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
     );
   }
 
@@ -214,6 +214,6 @@ class ExperienceSection extends StatelessWidget {
             ),
         ],
       ),
-    );
+        );
   }
 }

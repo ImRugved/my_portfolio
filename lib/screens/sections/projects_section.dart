@@ -308,7 +308,33 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                         if (project.containsKey('playStore'))
                           InkWell(
                             onTap: () {
-                              UrlUtils.openUrl(project['playStore'] as String);
+                              if (project['playStore'] != "") {
+                                UrlUtils.openUrl(
+                                    project['playStore'] as String);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'This app will be available on Google Play Store soon. Thank you for your patience.',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    backgroundColor: Colors.blue.shade800,
+                                    duration: Duration(seconds: 5),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    action: SnackBarAction(
+                                      label: 'CLOSE',
+                                      textColor: Colors.white,
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                             child: Tooltip(
                               message: 'Play Store',
@@ -329,7 +355,32 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                         if (project.containsKey('appStore'))
                           InkWell(
                             onTap: () {
-                              UrlUtils.openUrl(project['appStore'] as String);
+                              if (project['appStore'] != "") {
+                                UrlUtils.openUrl(project['appStore'] as String);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'This app will be available on App Store soon. Thank you for your patience.',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    backgroundColor: Colors.blue.shade800,
+                                    duration: Duration(seconds: 5),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    action: SnackBarAction(
+                                      label: 'CLOSE',
+                                      textColor: Colors.white,
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                             child: Tooltip(
                               message: 'App Store',

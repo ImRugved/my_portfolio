@@ -50,6 +50,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isOutlined;
   final IconData? icon;
+  final Color? color;
 
   const CustomButton({
     super.key,
@@ -57,6 +58,7 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.isOutlined = false,
     this.icon,
+    this.color,
   });
 
   @override
@@ -69,13 +71,13 @@ class CustomButton extends StatelessWidget {
         ? (isOutlined
             ? OutlinedButton.icon(
                 onPressed: onPressed,
-                icon: Icon(icon),
+                icon: Icon(icon, color: color),
                 label: Text(text),
                 style: buttonStyle,
               )
             : ElevatedButton.icon(
                 onPressed: onPressed,
-                icon: Icon(icon),
+                icon: Icon(icon, color: color),
                 label: Text(text),
                 style: buttonStyle,
               ))
