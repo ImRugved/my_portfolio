@@ -193,7 +193,6 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                     );
                   },
                   errorBuilder: (context, error, stackTrace) {
-                    print('Error loading image: $error');
                     return Container(
                       height: 200,
                       width: double.infinity,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:rugved_portfolio_flutter/screens/portfolio_app.dart';
 import 'package:rugved_portfolio_flutter/theme/theme_provider.dart';
+import 'package:rugved_portfolio_flutter/theme/theme_constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,8 +20,8 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, _) => MaterialApp(
           title: 'Rugved | Portfolio',
           debugShowCheckedModeBanner: false,
-          theme: ThemeProvider().theme,
-          darkTheme: ThemeProvider().theme,
+          theme: ThemeConstants.lightTheme,
+          darkTheme: ThemeConstants.darkTheme,
           themeMode: themeProvider.themeMode,
           builder: (context, child) => ResponsiveBreakpoints.builder(
             child: child!,

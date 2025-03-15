@@ -13,10 +13,11 @@ class ExperienceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SectionContainer(
       title: 'My Experience',
-      backgroundColor: ThemeConstants.light,
+      backgroundColor: isDarkMode ? ThemeConstants.dark : ThemeConstants.light,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: isMobile ? 0 : 16),
         child: Column(
@@ -179,6 +180,8 @@ class ExperienceSection extends StatelessWidget {
   }
 
   Widget _buildTimelineDot(BuildContext context, bool isLast) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: 72,
       margin: const EdgeInsets.only(top: 32),
@@ -191,7 +194,7 @@ class ExperienceSection extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
               shape: BoxShape.circle,
               border: Border.all(
-                color: Colors.white,
+                color: isDarkMode ? ThemeConstants.dark : Colors.white,
                 width: 3,
               ),
               boxShadow: [
