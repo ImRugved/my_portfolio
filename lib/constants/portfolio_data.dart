@@ -12,7 +12,7 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
   static const List<String> roles = [
     'Senior Flutter Developer',
     'Mobile Application Developer',
-    'Cross-Platform App Developer',
+    'Flutter Freelancer',
   ];
   static const List<String> headings = [
     'My Digital Professional Footprint',
@@ -236,7 +236,7 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
   ];
 
   static const Map<String, String> aboutMe = {
-    'title': 'Flutter Developer & Mobile App Specialist',
+    'title': 'Flutter Developer | Mobile App Specialist | Flutter Freelancer',
     'description1':
         'I\'m a Senior Flutter Developer with extensive experience in building user-friendly mobile applications for Android and iOS platforms. With a strong focus on clean code and optimal performance, I\'ve successfully deployed multiple apps on Play Store and Apple App Store, revolutionizing operational efficiency and increasing user engagement.',
     'description2':
