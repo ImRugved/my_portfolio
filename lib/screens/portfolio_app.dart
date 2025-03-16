@@ -37,7 +37,9 @@ class PortfolioApp extends StatefulWidget {
 class _PortfolioAppState extends State<PortfolioApp> {
   final _scrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final DownloadCounterProvider downloadProvider = DownloadCounterProvider();
+  //final DownloadCounterProvider downloadProvider = DownloadCounterProvider();
+  final DownloadCounterController downloadProvider =
+      Get.put(DownloadCounterController());
   final Map<String, GlobalKey> _sectionKeys = {
     'Home': GlobalKey(),
     'About': GlobalKey(),

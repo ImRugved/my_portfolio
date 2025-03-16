@@ -462,7 +462,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:rugved_portfolio_flutter/providers/count_controller.dart';
 import 'package:rugved_portfolio_flutter/providers/downloadCount_provider.dart';
 import 'package:rugved_portfolio_flutter/providers/firebase_provider.dart';
 import 'package:rugved_portfolio_flutter/screens/sections/download_counter.dart';
@@ -595,54 +597,99 @@ class _ContactSectionState extends State<ContactSection> {
           const SizedBox(height: 48),
 
           // Wrap just the resume button and counter with ChangeNotifierProvider
-          ChangeNotifierProvider(
-            create: (_) => DownloadCounterProvider(),
-            child: Column(
-              children: [
-                Consumer<DownloadCounterProvider>(
-                  builder: (context, downloadProvider, child) {
-                    return CustomButton(
-                      text: 'See Resume',
-                      onPressed: () async {
-                        try {
-                          // Show loading indicator
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Preparing resume...'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
+          // ChangeNotifierProvider(
+          //   create: (_) => DownloadCounterProvider(),
+          //   child: Column(
+          //     children: [
+          //       Consumer<DownloadCounterProvider>(
+          //         builder: (context, downloadProvider, child) {
+          //           return CustomButton(
+          //             text: 'See Resume',
+          //             onPressed: () async {
+          //               try {
+          //                 // Show loading indicator
+          //                 ScaffoldMessenger.of(context).showSnackBar(
+          //                   const SnackBar(
+          //                     content: Text('Preparing resume...'),
+          //                     duration: Duration(seconds: 1),
+          //                   ),
+          //                 );
 
-                          // Track resume download in Firestore
-                          await FirebaseProvider().trackResumeDownload();
+          //                 // Track resume download in Firestore
+          //                 await FirebaseProvider().trackResumeDownload();
 
-                          // Refresh the counter after tracking the download
-                          downloadProvider.loadDownloadCount();
+          //                 // Refresh the counter after tracking the download
+          //                 downloadProvider.loadDownloadCount();
 
-                          // Open the PDF
-                          await UrlUtils.openPdf('assets/resume/resume.pdf');
-                        } catch (e) {
-                          // Show error message if opening fails
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Failed to open resume: ${e.toString()}'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          print('Failed to open resume: $e');
-                        }
-                      },
-                      icon: Icons.visibility_outlined,
-                      color: Colors.white,
-                    );
-                  },
-                ),
-                // The DownloadCounter widget will be able to access the provider
-                const DownloadCounter(),
-              ],
-            ),
-          ),
+          //                 // Open the PDF
+          //                 await UrlUtils.openPdf('assets/resume/resume.pdf');
+          //               } catch (e) {
+          //                 // Show error message if opening fails
+          //                 ScaffoldMessenger.of(context).showSnackBar(
+          //                   SnackBar(
+          //                     content: Text(
+          //                         'Failed to open resume: ${e.toString()}'),
+          //                     backgroundColor: Colors.red,
+          //                   ),
+          //                 );
+          //                 print('Failed to open resume: $e');
+          //               }
+          //             },
+          //             icon: Icons.visibility_outlined,
+          //             color: Colors.white,
+          //           );
+          //         },
+          //       ),
+          //       // The DownloadCounter widget will be able to access the provider
+          //       const DownloadCounter(),
+          //     ],
+          //   ),
+          // ),
+          Column(
+            children: [
+              GetBuilder(
+                init: DownloadCounterController(),
+                builder: (downloadProvider) {
+                  return CustomButton(
+                    text: 'See Resume',
+                    onPressed: () async {
+                      try {
+                        // Show loading indicator
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Preparing resume...'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+
+                        // Track resume download in Firestore
+                        await FirebaseProvider().trackResumeDownload();
+
+                        // Refresh the counter after tracking the download
+                        downloadProvider.loadDownloadCount();
+
+                        // Open the PDF
+                        await UrlUtils.openPdf('assets/resume/resume.pdf');
+                      } catch (e) {
+                        // Show error message if opening fails
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('Failed to open resume: ${e.toString()}'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        print('Failed to open resume: $e');
+                      }
+                    },
+                    icon: Icons.visibility_outlined,
+                    color: Colors.white,
+                  );
+                },
+              ),
+              const DownloadCounter(),
+            ],
+          )
         ],
       ),
     );
