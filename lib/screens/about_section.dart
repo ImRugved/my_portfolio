@@ -64,21 +64,21 @@ class AboutSection extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Image.network(
-          'https://img.freepik.com/free-photo/programming-background-with-person-working-with-codes-computer_23-2150010125.jpg',
+        child: Image.asset(
+          'assets/images/about.jpg',
           fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-              ),
-            );
-          },
+          // loadingBuilder: (context, child, loadingProgress) {
+          //   if (loadingProgress == null) return child;
+          //   return Center(
+          //     child: CircularProgressIndicator(
+          //       value: loadingProgress.expectedTotalBytes != null
+          //           ? loadingProgress.cumulativeBytesLoaded /
+          //               loadingProgress.expectedTotalBytes!
+          //           : null,
+          //       valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          //     ),
+          //   );
+          // },
           errorBuilder: (context, error, stackTrace) {
             return Container(
               color: Colors.grey[200],
