@@ -112,7 +112,11 @@ class HeaderSection extends StatelessWidget implements PreferredSizeWidget {
                           child: Text(
                             section,
                             style: TextStyle(
-                              fontSize: isTablet ? 12 : 14,
+                              fontSize: isTablet
+                                  ? 12
+                                  : isMobile
+                                      ? 10
+                                      : 18,
                             ),
                           ),
                         ).animate(effects: AnimationUtils.fadeSlideUp),
