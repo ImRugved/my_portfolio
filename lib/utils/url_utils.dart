@@ -1,3 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:math' as math;
+
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'scroll_utils.dart'; // Import for ScrollToSectionNotification
@@ -51,13 +57,148 @@ class UrlUtils {
     }
   }
 
-  static Future<void> openPdf(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication,
-      );
+  // static Future<void> openPdf(String url) async {
+  //   log('clicked on open pdf');
+  //   final uri = Uri.parse(url);
+  //   if (await canLaunchUrl(uri)) {
+  //     await launchUrl(
+  //       uri,
+  //       mode: LaunchMode.externalApplication,
+  //     );
+  //   }
+  // }
+  // static Future<void> openPdf(String assetPath) async {
+  //   try {
+  //     log('Preparing to open PDF: $assetPath');
+
+  //     // Check if it's a remote URL
+  //     if (assetPath.startsWith('http://') || assetPath.startsWith('https://')) {
+  //       // Handle as a remote URL
+  //       final uri = Uri.parse(assetPath);
+  //       if (await canLaunchUrl(uri)) {
+  //         await launchUrl(
+  //           uri,
+  //           mode: LaunchMode.externalApplication,
+  //         );
+  //         log('Launched remote PDF URL: $assetPath');
+  //       } else {
+  //         log('Cannot launch URL: $assetPath');
+  //         throw 'Could not launch $assetPath';
+  //       }
+  //     } else {
+  //       // Handle as a local asset file
+
+  //       // 1. Get the application documents directory
+  //       final directory = await getApplicationDocumentsDirectory();
+  //       final tempFilePath = '${directory.path}/resume.pdf';
+
+  //       // 2. Load the asset file as bytes
+  //       log('Loading asset as bytes: $assetPath');
+  //       final ByteData data = await rootBundle.load(assetPath);
+  //       final List<int> bytes = data.buffer.asUint8List();
+
+  //       // 3. Write the asset bytes to a temporary file
+  //       log('Writing asset to temporary file: $tempFilePath');
+  //       final File tempFile = File(tempFilePath);
+  //       await tempFile.writeAsBytes(bytes);
+
+  //       // 4. Launch the file using URL launcher
+  //       final uri = Uri.file(tempFilePath);
+  //       log('Launching PDF with URI: $uri');
+
+  //       if (await canLaunchUrl(uri)) {
+  //         await launchUrl(
+  //           uri,
+  //           mode: LaunchMode.externalApplication,
+  //         );
+  //         log('Successfully launched PDF');
+  //       } else {
+  //         log('Cannot launch file: $tempFilePath');
+  //         throw 'Could not launch $tempFilePath';
+  //       }
+  //     }
+  //   } catch (e) {
+  //     log('Error opening PDF: $e');
+  //     // You can show an error dialog or snackbar here
+  //   }
+  // }
+  static Future<void> openPdf(String assetPath) async {
+    try {
+      log('Preparing to open PDF: $assetPath');
+
+      // Check if it's a remote URL
+      if (assetPath.startsWith('http://') || assetPath.startsWith('https://')) {
+        // Handle as a remote URL
+        final uri = Uri.parse(assetPath);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(
+            uri,
+            mode: LaunchMode.externalApplication,
+          );
+          log('Launched remote PDF URL: $assetPath');
+        } else {
+          log('Cannot launch URL: $assetPath');
+          throw 'Could not launch $assetPath';
+        }
+      } else {
+        // Handle as a local asset file
+
+        // 1. Get the application documents directory
+        final directory = await getApplicationDocumentsDirectory();
+
+        // 2. Generate a unique filename to avoid conflicts
+        final random = math.Random().nextInt(10000);
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final tempFilePath =
+            '${directory.path}/resume_${timestamp}_$random.pdf';
+
+        // 3. Load the asset file as bytes
+        log('Loading asset as bytes: $assetPath');
+        final ByteData data = await rootBundle.load(assetPath);
+        final List<int> bytes = data.buffer.asUint8List();
+
+        // 4. Write the asset bytes to a temporary file
+        log('Writing asset to temporary file: $tempFilePath');
+        final File tempFile = File(tempFilePath);
+
+        // 5. Check if file exists and try to delete it first
+        if (await tempFile.exists()) {
+          try {
+            await tempFile.delete();
+            log('Deleted existing file');
+          } catch (e) {
+            log('Could not delete existing file: $e');
+            // Continue anyway with a new unique filename
+          }
+        }
+
+        // 6. Write the file
+        await tempFile.writeAsBytes(bytes);
+
+        // 7. Launch the file using URL launcher
+        final uri = Uri.file(tempFilePath);
+        log('Launching PDF with URI: $uri');
+
+        if (await canLaunchUrl(uri)) {
+          final result = await launchUrl(
+            uri,
+            mode: LaunchMode.externalApplication,
+          );
+
+          if (result) {
+            log('Successfully launched PDF');
+          } else {
+            log('Failed to launch PDF');
+            throw 'Failed to launch PDF';
+          }
+        } else {
+          log('Cannot launch file: $tempFilePath');
+          throw 'Could not launch $tempFilePath';
+        }
+      }
+    } catch (e) {
+      log('Error opening PDF: $e');
+      rethrow; // Rethrow so the caller can handle or display error
     }
   }
 

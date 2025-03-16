@@ -1,8 +1,16 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:rugved_portfolio_flutter/providers/count_controller.dart';
+import 'package:rugved_portfolio_flutter/providers/downloadCount_provider.dart';
+import 'package:rugved_portfolio_flutter/providers/firebase_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:file_saver/file_saver.dart';
 import '../theme/theme_provider.dart';
@@ -29,6 +37,7 @@ class PortfolioApp extends StatefulWidget {
 class _PortfolioAppState extends State<PortfolioApp> {
   final _scrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final DownloadCounterProvider downloadProvider = DownloadCounterProvider();
   final Map<String, GlobalKey> _sectionKeys = {
     'Home': GlobalKey(),
     'About': GlobalKey(),
@@ -43,6 +52,7 @@ class _PortfolioAppState extends State<PortfolioApp> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    downloadProvider.loadDownloadCount();
   }
 
   @override
@@ -104,18 +114,108 @@ class _PortfolioAppState extends State<PortfolioApp> {
     }
   }
 
-  Future<void> _downloadResume() async {
+  static Future<void> downloadResume(BuildContext context) async {
     try {
+      final downloadProvider =
+          Get.put(DownloadCounterController()); // Show loading indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Preparing resume for download...'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Track download in Firebase
+      await FirebaseProvider().trackResumeDownload();
+
+      // Load the resume PDF from assets
       final ByteData data = await rootBundle.load('assets/resume/resume.pdf');
       final Uint8List bytes = data.buffer.asUint8List();
-      await FileSaver.instance.saveFile(
-        name: 'Rugved_Belkundkar_Resume.pdf',
-        bytes: bytes,
-        ext: 'pdf',
-        mimeType: MimeType.pdf,
-      );
+
+      bool success = false;
+
+      // Handle different platforms
+      if (kIsWeb) {
+        // Web platform
+        await FileSaver.instance.saveFile(
+          name: 'Rugved_Belkundkar_Resume.pdf',
+          bytes: bytes,
+          ext: 'pdf',
+          mimeType: MimeType.pdf,
+        );
+        success = true;
+      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        // Desktop platforms
+        success = await _saveFileOnDesktop(bytes);
+      } else {
+        // Mobile platforms
+        await FileSaver.instance.saveFile(
+          name: 'Rugved_Belkundkar_Resume.pdf',
+          bytes: bytes,
+          ext: 'pdf',
+          mimeType: MimeType.pdf,
+        );
+        success = true;
+      }
+
+      // Show success or error message
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Resume downloaded successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Update the provider to reflect the new download count
+        // Option 1: Increment the local count immediately
+
+        downloadProvider.incrementDownloadCount();
+        downloadProvider.loadDownloadCount();
+        // Option 2: Refresh from Firebase (more accurate but slower)
+        // Provider.of<DownloadCounterProvider>(context, listen: false).loadDownloadCount();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to download resume. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
       debugPrint('Error downloading resume: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  /// Save file using FilePicker's saveFile method (for desktop platforms)
+  static Future<bool> _saveFileOnDesktop(Uint8List bytes) async {
+    try {
+      // Ask user to select where to save the file
+      String? outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save Resume',
+        fileName: 'Rugved_Belkundkar_Resume.pdf',
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+
+      if (outputFile == null) {
+        // User canceled the save dialog
+        return false;
+      }
+
+      // Create the file at the selected location and write the bytes
+      final file = File(outputFile);
+      await file.writeAsBytes(bytes);
+      return true;
+    } catch (e) {
+      debugPrint('Error saving file on desktop: $e');
+      return false;
     }
   }
 
@@ -126,92 +226,93 @@ class _PortfolioAppState extends State<PortfolioApp> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: HeaderSection(
-        sections: _sectionKeys.keys.toList(),
-        onSectionSelected: _scrollToSection,
-        activeSection: _activeSection,
-        scaffoldKey: _scaffoldKey,
-      ),
-      drawer: isMobile ? _buildDrawer() : null,
-      body: NotificationListener<ScrollToSectionNotification>(
-        onNotification: (notification) {
-          // Handle notification by scrolling to the section
-          if (_sectionKeys.containsKey(notification.sectionName)) {
-            _scrollToSection(notification.sectionName);
-          }
-          return true; // Stop notification propagation
-        },
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              VisibilityDetector(
-                key: _sectionKeys['Home']!,
-                onVisibilityChanged: (info) {
-                  if (info.visibleFraction > 0.5) {
-                    setState(() => _activeSection = 'Home');
-                  }
-                },
-                child: const HeroSection(),
-              ),
-              VisibilityDetector(
-                key: _sectionKeys['About']!,
-                onVisibilityChanged: (info) {
-                  if (info.visibleFraction > 0.5) {
-                    setState(() => _activeSection = 'About');
-                  }
-                },
-                child: const AboutSection(),
-              ),
-              VisibilityDetector(
-                key: _sectionKeys['Skills']!,
-                onVisibilityChanged: (info) {
-                  if (info.visibleFraction > 0.5) {
-                    setState(() => _activeSection = 'Skills');
-                  }
-                },
-                child: const SkillsSection(),
-              ),
-              VisibilityDetector(
-                key: _sectionKeys['Experience']!,
-                onVisibilityChanged: (info) {
-                  if (info.visibleFraction > 0.5) {
-                    setState(() => _activeSection = 'Experience');
-                  }
-                },
-                child: const ExperienceSection(),
-              ),
-              VisibilityDetector(
-                key: _sectionKeys['Projects']!,
-                onVisibilityChanged: (info) {
-                  if (info.visibleFraction > 0.5) {
-                    setState(() => _activeSection = 'Projects');
-                  }
-                },
-                child: const ProjectsSection(),
-              ),
-              VisibilityDetector(
-                key: _sectionKeys['Contact']!,
-                onVisibilityChanged: (info) {
-                  if (info.visibleFraction > 0.5) {
-                    setState(() => _activeSection = 'Contact');
-                  }
-                },
-                child: const ContactSection(),
-              ),
-              const FooterSection(),
-            ],
+        key: _scaffoldKey,
+        appBar: HeaderSection(
+          sections: _sectionKeys.keys.toList(),
+          onSectionSelected: _scrollToSection,
+          activeSection: _activeSection,
+          scaffoldKey: _scaffoldKey,
+        ),
+        drawer: isMobile ? _buildDrawer() : null,
+        body: NotificationListener<ScrollToSectionNotification>(
+          onNotification: (notification) {
+            // Handle notification by scrolling to the section
+            if (_sectionKeys.containsKey(notification.sectionName)) {
+              _scrollToSection(notification.sectionName);
+            }
+            return true; // Stop notification propagation
+          },
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                VisibilityDetector(
+                  key: _sectionKeys['Home']!,
+                  onVisibilityChanged: (info) {
+                    if (info.visibleFraction > 0.5) {
+                      setState(() => _activeSection = 'Home');
+                    }
+                  },
+                  child: const HeroSection(),
+                ),
+                VisibilityDetector(
+                  key: _sectionKeys['About']!,
+                  onVisibilityChanged: (info) {
+                    if (info.visibleFraction > 0.5) {
+                      setState(() => _activeSection = 'About');
+                    }
+                  },
+                  child: const AboutSection(),
+                ),
+                VisibilityDetector(
+                  key: _sectionKeys['Skills']!,
+                  onVisibilityChanged: (info) {
+                    if (info.visibleFraction > 0.5) {
+                      setState(() => _activeSection = 'Skills');
+                    }
+                  },
+                  child: const SkillsSection(),
+                ),
+                VisibilityDetector(
+                  key: _sectionKeys['Experience']!,
+                  onVisibilityChanged: (info) {
+                    if (info.visibleFraction > 0.5) {
+                      setState(() => _activeSection = 'Experience');
+                    }
+                  },
+                  child: const ExperienceSection(),
+                ),
+                VisibilityDetector(
+                  key: _sectionKeys['Projects']!,
+                  onVisibilityChanged: (info) {
+                    if (info.visibleFraction > 0.5) {
+                      setState(() => _activeSection = 'Projects');
+                    }
+                  },
+                  child: const ProjectsSection(),
+                ),
+                VisibilityDetector(
+                  key: _sectionKeys['Contact']!,
+                  onVisibilityChanged: (info) {
+                    if (info.visibleFraction > 0.5) {
+                      setState(() => _activeSection = 'Contact');
+                    }
+                  },
+                  child: const ContactSection(),
+                ),
+                const FooterSection(),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _downloadResume,
-        icon: const Icon(Icons.download),
-        label: const Text('Resume'),
-      ),
-    );
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () async {
+            await downloadResume(context);
+          },
+          icon: const Icon(Icons.download),
+          label: const Text('Resume'),
+        ));
   }
 
   Widget _buildDrawer() {
@@ -277,8 +378,8 @@ class _PortfolioAppState extends State<PortfolioApp> {
             ListTile(
               title: const Text('Download Resume'),
               leading: const Icon(Icons.download),
-              onTap: () {
-                _downloadResume();
+              onTap: () async {
+                await downloadResume(context);
                 Navigator.of(context).pop();
               },
             ),
