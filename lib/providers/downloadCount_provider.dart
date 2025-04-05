@@ -8,17 +8,17 @@
 //   bool _isLoading = true;
 //   String _errorMessage = '';
 
-//   // Getters
+
 //   int get downloadCount => _downloadCount;
 //   bool get isLoading => _isLoading;
 //   String get errorMessage => _errorMessage;
 
-//   // Constructor - Load data on initialization
+
 //   DownloadCounterProvider() {
 //     loadDownloadCount();
 //   }
 
-//   // Load download count from Firestore
+
 //   Future<void> loadDownloadCount() async {
 //     try {
 //       _isLoading = true;
@@ -38,7 +38,7 @@
 //     }
 //   }
 
-//   // Increment count (used when a new download happens)
+
 //   void incrementDownloadCount() {
 //     _downloadCount++;
 //     notifyListeners();

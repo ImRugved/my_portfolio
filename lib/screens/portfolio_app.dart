@@ -118,72 +118,212 @@ class _PortfolioAppState extends State<PortfolioApp> {
 
   static Future<void> downloadResume(BuildContext context) async {
     try {
-      final downloadProvider =
-          Get.put(DownloadCounterController()); // Show loading indicator
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Preparing resume for download...'),
-          duration: Duration(seconds: 2),
-        ),
+      final downloadProvider = Get.put(DownloadCounterController());
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Text(
+              'Enter your name and email to download resume',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: downloadProvider.nmCtrl1,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: downloadProvider.emCtrl1,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    String name = downloadProvider.nmCtrl1.text.trim();
+                    String email = downloadProvider.emCtrl1.text.trim();
+                    if (name != '' && email != '') {
+                      // TODO: Handle download logic here
+                      await FirebaseProvider().resumeDownloadMessage(
+                        name: name,
+                        email: email,
+                      );
+
+                      Navigator.of(context).pop();
+                      // Close the dialog
+                      // Optional: Show snackbar or toast
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Preparing resume for download...'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+
+                      // Track download in Firebase
+                      await FirebaseProvider().trackResumeDownload();
+
+                      // Load the resume PDF from assets
+                      final ByteData data =
+                          await rootBundle.load('assets/resume/resume.pdf');
+                      final Uint8List bytes = data.buffer.asUint8List();
+
+                      bool success = false;
+
+                      // Handle different platforms
+                      if (kIsWeb) {
+                        // Web platform
+                        await FileSaver.instance.saveFile(
+                          name: 'Rugved_Belkundkar_Resume.pdf',
+                          bytes: bytes,
+                          ext: 'pdf',
+                          mimeType: MimeType.pdf,
+                        );
+                        success = true;
+                      } else if (Platform.isWindows ||
+                          Platform.isLinux ||
+                          Platform.isMacOS) {
+                        // Desktop platforms
+                        success = await _saveFileOnDesktop(bytes);
+                      } else {
+                        // Mobile platforms
+                        await FileSaver.instance.saveFile(
+                          name: 'Rugved_Belkundkar_Resume.pdf',
+                          bytes: bytes,
+                          ext: 'pdf',
+                          mimeType: MimeType.pdf,
+                        );
+                        success = true;
+                      }
+
+                      // Show success or error message
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Resume downloaded successfully!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        downloadProvider.nmCtrl1.clear();
+
+                        downloadProvider.emCtrl1
+                            .clear(); // Update the provider to reflect the new download count
+                        // Option 1: Increment the local count immediately
+
+                        downloadProvider.incrementDownloadCount();
+                        downloadProvider.loadDownloadCount();
+                        // Option 2: Refresh from Firebase (more accurate but slower)
+                        // Provider.of<DownloadCounterProvider>(context, listen: false).loadDownloadCount();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Failed to download resume. Please try again.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Please enter both name and email to see the resume'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      // Optional: Show error message
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Download Resume'),
+                ),
+              ],
+            ),
+          );
+        },
       );
+      // Show loading indicator
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Preparing resume for download...'),
+      //     duration: Duration(seconds: 2),
+      //   ),
+      // );
 
-      // Track download in Firebase
-      await FirebaseProvider().trackResumeDownload();
+      // // Track download in Firebase
+      // await FirebaseProvider().trackResumeDownload();
 
-      // Load the resume PDF from assets
-      final ByteData data = await rootBundle.load('assets/resume/resume.pdf');
-      final Uint8List bytes = data.buffer.asUint8List();
+      // // Load the resume PDF from assets
+      // final ByteData data = await rootBundle.load('assets/resume/resume.pdf');
+      // final Uint8List bytes = data.buffer.asUint8List();
 
-      bool success = false;
+      // bool success = false;
 
-      // Handle different platforms
-      if (kIsWeb) {
-        // Web platform
-        await FileSaver.instance.saveFile(
-          name: 'Rugved_Belkundkar_Resume.pdf',
-          bytes: bytes,
-          ext: 'pdf',
-          mimeType: MimeType.pdf,
-        );
-        success = true;
-      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-        // Desktop platforms
-        success = await _saveFileOnDesktop(bytes);
-      } else {
-        // Mobile platforms
-        await FileSaver.instance.saveFile(
-          name: 'Rugved_Belkundkar_Resume.pdf',
-          bytes: bytes,
-          ext: 'pdf',
-          mimeType: MimeType.pdf,
-        );
-        success = true;
-      }
+      // // Handle different platforms
+      // if (kIsWeb) {
+      //   // Web platform
+      //   await FileSaver.instance.saveFile(
+      //     name: 'Rugved_Belkundkar_Resume.pdf',
+      //     bytes: bytes,
+      //     ext: 'pdf',
+      //     mimeType: MimeType.pdf,
+      //   );
+      //   success = true;
+      // } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      //   // Desktop platforms
+      //   success = await _saveFileOnDesktop(bytes);
+      // } else {
+      //   // Mobile platforms
+      //   await FileSaver.instance.saveFile(
+      //     name: 'Rugved_Belkundkar_Resume.pdf',
+      //     bytes: bytes,
+      //     ext: 'pdf',
+      //     mimeType: MimeType.pdf,
+      //   );
+      //   success = true;
+      // }
 
-      // Show success or error message
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Resume downloaded successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+      // // Show success or error message
+      // if (success) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Resume downloaded successfully!'),
+      //       backgroundColor: Colors.green,
+      //     ),
+      //   );
+      //   downloadProvider.nmCtrl1.clear();
 
-        // Update the provider to reflect the new download count
-        // Option 1: Increment the local count immediately
+      //   downloadProvider.emCtrl1
+      //       .clear(); // Update the provider to reflect the new download count
+      //   // Option 1: Increment the local count immediately
 
-        downloadProvider.incrementDownloadCount();
-        downloadProvider.loadDownloadCount();
-        // Option 2: Refresh from Firebase (more accurate but slower)
-        // Provider.of<DownloadCounterProvider>(context, listen: false).loadDownloadCount();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to download resume. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      //   downloadProvider.incrementDownloadCount();
+      //   downloadProvider.loadDownloadCount();
+      //   // Option 2: Refresh from Firebase (more accurate but slower)
+      //   // Provider.of<DownloadCounterProvider>(context, listen: false).loadDownloadCount();
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Failed to download resume. Please try again.'),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
     } catch (e) {
       debugPrint('Error downloading resume: $e');
       ScaffoldMessenger.of(context).showSnackBar(

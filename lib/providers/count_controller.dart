@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../providers/firebase_provider.dart';
 
@@ -8,15 +9,15 @@ class DownloadCounterController extends GetxController {
   RxInt downloadCount = 0.obs;
   RxBool isLoading = true.obs;
   RxString errorMessage = ''.obs;
+  TextEditingController nmCtrl = TextEditingController();
+  TextEditingController emCtrl = TextEditingController();
+  TextEditingController nmCtrl1 = TextEditingController();
+  TextEditingController emCtrl1 = TextEditingController();
 
-  // Getters
-
-  // Constructor - Load data on initialization
   DownloadCounterProvider() {
     loadDownloadCount();
   }
 
-  // Load download count from Firestore
   Future<void> loadDownloadCount() async {
     try {
       isLoading.value = true;
@@ -30,14 +31,12 @@ class DownloadCounterController extends GetxController {
       update();
     } catch (e) {
       print('Error loading download count: $e');
-      errorMessage.value =
-          ''; // Keeping this empty to avoid showing error to users
+      errorMessage.value = '';
       isLoading.value = false;
       update();
     }
   }
 
-  // Increment count (used when a new download happens)
   void incrementDownloadCount() {
     downloadCount++;
     update();

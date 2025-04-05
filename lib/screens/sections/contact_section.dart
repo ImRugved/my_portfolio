@@ -459,6 +459,8 @@
 //     );
 //   }
 // }
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -544,6 +546,80 @@ class _ContactSectionState extends State<ContactSection> {
     }
   }
 
+  void showResumeDialog(BuildContext context) {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            'Enter your name and email to download resume',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  String name = nameController.text.trim();
+                  String email = emailController.text.trim();
+                  if (name.isNotEmpty && email.isNotEmpty) {
+                    // TODO: Handle download logic here
+                    await FirebaseProvider().resumeDownloadMessage(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                    );
+
+                    Navigator.of(context).pop();
+                    // Close the dialog
+                    // Optional: Show snackbar or toast
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Please enter both name and email to see the resume'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    // Optional: Show error message
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('Download Resume'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveUtils.isMobile(context);
@@ -596,7 +672,6 @@ class _ContactSectionState extends State<ContactSection> {
             ),
           const SizedBox(height: 48),
 
-          // Wrap just the resume button and counter with ChangeNotifierProvider
           // ChangeNotifierProvider(
           //   create: (_) => DownloadCounterProvider(),
           //   child: Column(
@@ -655,23 +730,111 @@ class _ContactSectionState extends State<ContactSection> {
                     onPressed: () async {
                       try {
                         // Show loading indicator
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Preparing resume...'),
-                            duration: Duration(seconds: 1),
-                          ),
+                        //   showResumeDialog(context);
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              title: const Text(
+                                'Enter your name and email to download resume',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextField(
+                                    controller: downloadProvider.nmCtrl,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Name',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  TextField(
+                                    controller: downloadProvider.emCtrl,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Email',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.emailAddress,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      String name =
+                                          downloadProvider.nmCtrl.text.trim();
+                                      String email =
+                                          downloadProvider.emCtrl.text.trim();
+                                      if (name != '' && email != '') {
+                                        // TODO: Handle download logic here
+                                        await FirebaseProvider()
+                                            .resumeDownloadMessage(
+                                          name: name,
+                                          email: email,
+                                        );
+
+                                        Navigator.of(context).pop();
+                                        // Close the dialog
+                                        // Optional: Show snackbar or toast
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content:
+                                                Text('Preparing resume...'),
+                                            duration: Duration(seconds: 1),
+                                          ),
+                                        );
+
+                                        await FirebaseProvider()
+                                            .trackResumeDownload();
+
+                                        downloadProvider.loadDownloadCount();
+
+                                        await UrlUtils.openPdf(
+                                            'assets/resume/resume.pdf');
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Please enter both name and email to see the resume'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                        // Optional: Show error message
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text('Submit'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         );
+                        //..........................................
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   const SnackBar(
+                        //     content: Text('Preparing resume...'),
+                        //     duration: Duration(seconds: 1),
+                        //   ),
+                        // );
 
-                        // Track resume download in Firestore
-                        await FirebaseProvider().trackResumeDownload();
+                        // await FirebaseProvider().trackResumeDownload();
 
-                        // Refresh the counter after tracking the download
-                        downloadProvider.loadDownloadCount();
+                        // downloadProvider.loadDownloadCount();
 
-                        // Open the PDF
-                        await UrlUtils.openPdf('assets/resume/resume.pdf');
+                        // await UrlUtils.openPdf('assets/resume/resume.pdf');
                       } catch (e) {
-                        // Show error message if opening fails
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content:

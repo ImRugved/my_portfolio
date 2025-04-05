@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary color palette - modern blue gradient
   static const Color primary = Color(0xFF2563EB);
   static const Color accent = Color(0xFFEF4444);
   static const Color textPrimary = Color(0xFF1F2937);

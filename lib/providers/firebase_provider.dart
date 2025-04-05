@@ -2,23 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseProvider {
-  // Singleton pattern
   static final FirebaseProvider _instance = FirebaseProvider._internal();
   factory FirebaseProvider() => _instance;
   FirebaseProvider._internal();
 
-  // Firebase Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Initialize Firebase
   static Future<void> initialize() async {
     await Firebase.initializeApp();
   }
 
-  // Get Firestore instance
   FirebaseFirestore get firestore => _firestore;
 
-  // Add contact form data to Firestore
   Future<void> submitContactForm({
     required String name,
     required String email,
@@ -26,14 +21,13 @@ class FirebaseProvider {
     required String message,
   }) async {
     try {
-      // Create a new document in the "contact_messages" collection
       await _firestore.collection('contact_messages').add({
         'name': name,
         'email': email,
         'subject': subject,
         'message': message,
         'timestamp': FieldValue.serverTimestamp(),
-        'status': 'unread', // Can be used to track read/unread status
+        'status': 'unread',
       });
 
       print('Contact form data submitted successfully!');
@@ -43,7 +37,25 @@ class FirebaseProvider {
     }
   }
 
-  // Get all contact messages (for admin purposes)
+  Future<void> resumeDownloadMessage({
+    required String name,
+    required String email,
+  }) async {
+    try {
+      await _firestore.collection('resume_message').add({
+        'name': name,
+        'email': email,
+        'timestamp': FieldValue.serverTimestamp(),
+        'status': 'unread',
+      });
+
+      print('Contact form data submitted successfully!');
+    } catch (e) {
+      print('Error submitting contact form data: $e');
+      throw Exception('Failed to submit contact form: $e');
+    }
+  }
+
   Future<List<Map<String, dynamic>>> getContactMessages() async {
     try {
       final QuerySnapshot snapshot = await _firestore
@@ -63,7 +75,6 @@ class FirebaseProvider {
     }
   }
 
-  // Update message status (for admin purposes)
   Future<void> updateMessageStatus(String messageId, String status) async {
     try {
       await _firestore.collection('contact_messages').doc(messageId).update({
@@ -105,7 +116,6 @@ class FirebaseProvider {
     }
   }
 
-  // Get resume download count (for analytics purposes)
   Future<int> getResumeDownloadCount() async {
     try {
       // Reference to the resume_clicked collection and document

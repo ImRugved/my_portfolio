@@ -90,78 +90,113 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'description':
           'Medical news application delivering concise 60-word articles to healthcare professionals with personalized content delivery based on user-selected interests.',
       'image': 'https://cdn-icons-png.flaticon.com/512/2382/2382461.png',
+      'assetImage': 'assets/images/coretext.png',
       'technologies': ['Flutter', 'Firebase', 'Web View', 'GetX'],
       'liveUrl': '#',
-      'playStore': '',
+      'playStore':
+          'https://play.google.com/store/apps/details?id=coretext.digital',
       'appStore': '',
       'category': 'healthcare',
+      'isDeployed': '1',
+      'driverLink': '',
     },
     {
       'title': 'Indrayani - Educational App',
       'description':
           'Educational app with timed multiple-choice exams, secure payment integration, and comprehensive exam functionality including timers and detailed scorecards.',
       'image': 'https://cdn-icons-png.flaticon.com/512/2436/2436874.png',
+      'assetImage': 'assets/images/indrayani.png',
       'technologies': ['Flutter', 'Razorpay', 'Firebase'],
       'liveUrl': '#',
       'playStore': '',
       'appStore': '',
       'category': 'education',
+      'isDeployed': '1',
     },
     {
       'title': 'WorksJoy (HRMS)',
       'description':
           'Employee attendance and HR management system using Flutter and Firebase, boosting productivity by 35% with features like real-time punch-in/out and leave management.',
       'image': 'https://cdn-icons-png.flaticon.com/512/2906/2906274.png',
+      'assetImage': 'assets/images/worksjoy.png',
       'technologies': ['Flutter', 'Firebase', 'Location'],
       'liveUrl': '#',
       'playStore': '',
       'appStore': '',
       'category': 'management',
+      'isDeployed': '1',
     },
     {
       'title': 'Nishchinta (Canteen Management)',
       'description':
           'Comprehensive canteen management system with dynamic menu management, real-time dashboards, and flexible ordering capabilities.',
       'image': 'https://cdn-icons-png.flaticon.com/512/1147/1147805.png',
+      'assetImage': 'assets/images/nish.png',
       'technologies': ['Flutter', 'Firebase', 'Real-time'],
       'liveUrl': '#',
       'playStore':
           'https://play.google.com/store/apps/details?id=com.daccess.nishintacms&pli=1',
       'appStore': 'https://apps.apple.com/us/app/annasree/id6698878410',
       'category': 'management',
+      'isDeployed': '1',
     },
     {
       'title': 'Parking Management App',
       'description':
           'Multi-platform parking management system with QR code vehicle tracking, reducing entry time by 30% and checkout times by 50%.',
       'image': 'https://cdn-icons-png.flaticon.com/512/708/708949.png',
+      'assetImage': 'assets/images/parking.jpg',
       'technologies': ['Flutter', 'QR Code', 'Billing'],
       'liveUrl': '#',
+      'playStore': '',
+      'appStore': '',
       'category': 'utility',
+      'isDeployed': '0',
+      'driverLink': '',
     },
     {
       'title': 'Alleviz Meeting',
       'description':
           'Flutter meeting app with secure authentication, scheduling capabilities, and collaborative tools for meeting creation with real-time notifications.',
       'image': 'https://cdn-icons-png.flaticon.com/512/1968/1968641.png',
+      'assetImage': 'assets/images/all.png',
       'technologies': ['Flutter', 'Real-time', 'Scheduling'],
       'liveUrl': '#',
       'playStore':
           'https://play.google.com/apps/test/RQ9K_bqHUjI/ahAO29uNSvL9nia2sOgFiFsdMQEUAQE1txF36EQUyjIIY_R5G_vkN9FmUehT5y6aFkBY9Fz78CtBwP4dN7YO1P9TaX',
       'appStore': '',
       'category': 'utility',
+      'isDeployed': '1',
     },
     {
       'title': 'Site Survey Application',
       'description':
           'Flutter site survey app with REST API integration, product catalog and PDF management using GetX and MVC patterns.',
       'image': 'https://cdn-icons-png.flaticon.com/512/4300/4300059.png',
+      'assetImage': 'assets/images/site.png',
       'technologies': ['Flutter', 'REST API', 'PDF'],
       'liveUrl': '#',
       'playStore':
           'https://play.google.com/store/apps/details?id=com.survey.siteSurvey',
       'appStore': 'https://apps.apple.com/us/app/site-survey/id6523421935',
       'category': 'utility',
+      'isDeployed': '1',
+    },
+    {
+      'title': 'Personal Portfolio App',
+      'description':
+          'Responsive Flutter portfolio app showcasing projects, experience, and skills with clean UI and smooth navigation. Built using GetX and REST API integration.',
+      'image': 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+      'assetImage': 'assets/images/profile.png',
+      'technologies': ['Flutter', 'REST API', 'GetX'],
+      'liveUrl': '#',
+      'playStore':
+          'https://play.google.com/store/apps/details?id=com.rugved.portfolio',
+      'appStore':
+          'https://apps.apple.com/us/app/personal-portfolio/id6523424567',
+      'category': 'portfolio',
+      'isDeployed': '0',
+      'driverLink': '',
     },
   ];
 

@@ -6,7 +6,7 @@ import '../../theme/theme_constants.dart';
 import '../../utils/animation_utils.dart';
 import '../../utils/responsive_utils.dart' as app_responsive;
 import '../../widgets/common_widgets.dart';
-import '../../utils/scroll_utils.dart'; // Import for ScrollToSectionNotification
+import '../../utils/scroll_utils.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -60,7 +60,7 @@ class AboutSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(38),
                   child: Image.asset(
                     'assets/images/about.jpg',
-                    fit: isMobile ? BoxFit.contain : null,
+                    fit: isMobile ? BoxFit.fill : null,
                     errorBuilder: (BuildContext context, Object error,
                         StackTrace? stackTrace) {
                       return Container(
