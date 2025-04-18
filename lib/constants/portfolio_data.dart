@@ -97,7 +97,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
           'https://play.google.com/store/apps/details?id=coretext.digital',
       'appStore': '',
       'category': 'healthcare',
-      'driverLink': '',
+      'driverLink':
+          'https://drive.google.com/file/d/1KTMpbaJ0b_Z4I3qyu6UVNcyijAOl_pWC/view?usp=sharing',
     },
     {
       'title': 'Indrayani - Educational App',
@@ -153,7 +154,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'playStore': '',
       'appStore': '',
       'category': 'utility',
-      'driverLink': '',
+      'driverLink':
+          'https://drive.google.com/file/d/1KMA9Ivz-W0gRMY8yLan5LYAR0rRM5Bq4/view?usp=sharing',
     },
     {
       'title': 'Alleviz Meeting',
