@@ -31,6 +31,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        if (project.android.hasProperty('defaultConfig.targetSdkVersion') && 
+            project.android.defaultConfig.targetSdkVersion >= 29) {
+            requestLegacyExternalStorage true
+        }
     }
 
     buildTypes {

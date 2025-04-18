@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <!-- Background Circle -->
+  <circle cx="150" cy="150" r="140" fill="#2A2D34" />
+  
+  <!-- Outer Ring -->
+  <circle cx="150" cy="150" r="135" fill="none" stroke="#4B7BEC" stroke-width="3" />
+  
+  <!-- R stylized letter -->
+  <path d="M100 95 L100 205 L125 205 L125 160 L150 160 C170 160 185 150 185 130 C185 110 170 95 150 95 Z" fill="#4B7BEC" />
+  <path d="M125 125 L150 125 C155 125 160 127 160 135 C160 143 155 145 150 145 L125 145 Z" fill="#2A2D34" />
+  <path d="M125 160 L145 205 L175 205 L150 160 Z" fill="#4B7BEC" />
+  
+  <!-- Code Brackets -->
+  <path d="M80 120 L60 150 L80 180" fill="none" stroke="#45ADA8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M220 120 L240 150 L220 180" fill="none" stroke="#45ADA8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Flutter Icon Simplified -->
+  <path d="M195 90 L175 110 L195 130 L215 110 Z" fill="#03A9F4" />
+  <path d="M195 140 L175 160 L195 180 L215 160 Z" fill="#03A9F4" opacity="0.7" />
+</svg>

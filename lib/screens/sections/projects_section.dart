@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -124,11 +125,11 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                 showCheckmark: false,
                 label: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
                   child: Text(
                     category['name'] as String,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: isSelected
                           ? Colors.white
                           : Theme.of(context).textTheme.bodyLarge?.color,
@@ -167,8 +168,9 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
   Widget _buildProjectCard(BuildContext context, Map<String, dynamic> project) {
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
-    final imageHeight =
-        isMobile ? 150.0 : 200.0; // Smaller image height on mobile
+    final imageHeight = isMobile ? 150.0 : 200.0;
+    final imageWidth =
+        isMobile ? double.infinity : 100.0; // Set a fixed width for non-mobile
 
     return InkWell(
       onTap: () => _showProjectDetailsDialog(context, project),
@@ -189,27 +191,57 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                   const BorderRadius.vertical(top: Radius.circular(24)),
               child: Stack(
                 children: [
+                  // if (project.containsKey('svg'))
+                  //   SvgPicture.asset(
+                  //     project['svg'] as String,
+                  //     height: imageHeight,
+                  //     width: double.infinity,
+                  //     fit: BoxFit.fill,
+                  //     placeholderBuilder: (BuildContext context) {
+                  //       return Container(
+                  //         height: imageHeight,
+                  //         width: double.infinity,
+                  //         color: Colors.grey[200],
+                  //         child: Center(
+                  //           child: Icon(
+                  //             Icons.broken_image_rounded,
+                  //             color: Colors.grey[400],
+                  //             size: isMobile ? 30 : 50,
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+
                   project['assetImage'] != null
-                      ? Image.asset(
-                          project['assetImage'] as String,
+                      ? Container(
+                          width: project['assetImage'] !=
+                                      'assets/images/worksjoy.png' ||
+                                  project['assetImage'] !=
+                                      'assets/images/all.png'
+                              ? double.infinity
+                              : 100,
                           height: imageHeight,
-                          width: double.infinity,
-                          fit: BoxFit.fill,
-                          errorBuilder: (BuildContext context, Object error,
-                              StackTrace? stackTrace) {
-                            return Container(
-                              height: imageHeight,
-                              width: double.infinity,
-                              color: Colors.grey[200],
-                              child: Center(
-                                child: Icon(
-                                  Icons.broken_image_rounded,
-                                  color: Colors.grey[400],
-                                  size: isMobile ? 30 : 50,
-                                ),
-                              ),
-                            );
-                          },
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(16)),
+                            image: project['assetImage'] !=
+                                        'assets/images/worksjoy.png' ||
+                                    project['assetImage'] !=
+                                        'assets/images/all.png'
+                                ? DecorationImage(
+                                    image: AssetImage(
+                                      project['assetImage'] as String,
+                                    ),
+                                    fit: BoxFit.fitHeight,
+                                  )
+                                : DecorationImage(
+                                    image: AssetImage(
+                                      project['assetImage'] as String,
+                                    ),
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                          ),
                         )
                       : Image.network(
                           project['image'] as String,
@@ -381,230 +413,215 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                   ),
                   SizedBox(height: isMobile ? 12 : 16),
                   // App store and action buttons
-                  project['isDeployed'] == '1'
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Wrap(
-                              spacing: isMobile ? 4 : 8,
-                              children: [
-                                if (project.containsKey('playStore'))
-                                  InkWell(
-                                    onTap: () {
-                                      if (project['playStore'] != "") {
-                                        UrlUtils.openUrl(
-                                            project['playStore'] as String);
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: const Text(
-                                              'This app will be available on Google Play Store soon. Thank you for your patience.',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                            backgroundColor:
-                                                Colors.blue.shade800,
-                                            duration:
-                                                const Duration(seconds: 5),
-                                            behavior: SnackBarBehavior.floating,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            action: SnackBarAction(
-                                              label: 'CLOSE',
-                                              textColor: Colors.white,
-                                              onPressed: () {
-                                                ScaffoldMessenger.of(context)
-                                                    .hideCurrentSnackBar();
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: Tooltip(
-                                      message: 'Play Store',
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Icon(
-                                          FontAwesomeIcons.googlePlay,
-                                          size: 20,
-                                          color: Colors.green[700],
-                                        ),
+                  // project['isDeployed'] == '0'
+                  //     ?
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Wrap(
+                        spacing: isMobile ? 4 : 8,
+                        children: [
+                          if (project.containsKey('playStore'))
+                            InkWell(
+                              onTap: () {
+                                if (project['playStore'] != "") {
+                                  UrlUtils.openUrl(
+                                      project['playStore'] as String);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'This app will be available on Google Play Store soon. Thank you for your patience.',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      backgroundColor: Colors.blue.shade800,
+                                      duration: const Duration(seconds: 5),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      action: SnackBarAction(
+                                        label: 'CLOSE',
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
+                                        },
                                       ),
                                     ),
+                                  );
+                                }
+                              },
+                              child: Tooltip(
+                                message: 'Play Store',
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                if (project.containsKey('appStore'))
-                                  InkWell(
-                                    onTap: () {
-                                      if (project['appStore'] != "") {
-                                        UrlUtils.openUrl(
-                                            project['appStore'] as String);
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: const Text(
-                                              'This app will be available on App Store soon. Thank you for your patience.',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                            backgroundColor:
-                                                Colors.blue.shade800,
-                                            duration:
-                                                const Duration(seconds: 5),
-                                            behavior: SnackBarBehavior.floating,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            action: SnackBarAction(
-                                              label: 'CLOSE',
-                                              textColor: Colors.white,
-                                              onPressed: () {
-                                                ScaffoldMessenger.of(context)
-                                                    .hideCurrentSnackBar();
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: Tooltip(
-                                      message: 'App Store',
-                                      child: Container(
-                                        padding:
-                                            EdgeInsets.all(isMobile ? 6 : 8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Icon(
-                                          FontAwesomeIcons.appStore,
-                                          size: isMobile ? 16 : 20,
-                                          color: Colors.blue[700],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                if (project.containsKey('liveUrl') &&
-                                    project['liveUrl'] != '#')
-                                  InkWell(
-                                    onTap: () {
-                                      UrlUtils.openUrl(
-                                          project['liveUrl'] as String);
-                                    },
-                                    child: Tooltip(
-                                      message: 'View Project',
-                                      child: Container(
-                                        padding:
-                                            EdgeInsets.all(isMobile ? 6 : 8),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Icon(
-                                          FontAwesomeIcons
-                                              .arrowUpRightFromSquare,
-                                          size: isMobile ? 14 : 18,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                if (project.containsKey('githubUrl'))
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(left: isMobile ? 4 : 8),
-                                    child: InkWell(
-                                      onTap: () {
-                                        UrlUtils.openUrl(
-                                            project['githubUrl'] as String);
-                                      },
-                                      child: Tooltip(
-                                        message: 'Source Code',
-                                        child: Container(
-                                          padding:
-                                              EdgeInsets.all(isMobile ? 6 : 8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[800],
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Icon(
-                                            FontAwesomeIcons.github,
-                                            size: isMobile ? 14 : 18,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : InkWell(
-                          onTap: () {
-                            if (project['isDeployed'] != "0") {
-                              UrlUtils.openUrl(project['driverLink'] as String);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'This app will be available on Google drive soon. Thank you for your patience.',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  backgroundColor: Colors.blue.shade800,
-                                  duration: const Duration(seconds: 5),
-                                  behavior: SnackBarBehavior.floating,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  action: SnackBarAction(
-                                    label: 'CLOSE',
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                    },
+                                  child: Icon(
+                                    FontAwesomeIcons.googlePlay,
+                                    size: 20,
+                                    color: Colors.green[700],
                                   ),
                                 ),
-                              );
-                            }
-                          },
-                          child: Tooltip(
-                            message: 'Google Drive',
-                            child: Container(
-                              padding: EdgeInsets.all(isMobile ? 6 : 8),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Icon(
-                                FontAwesomeIcons.googleDrive,
-                                size: isMobile ? 16 : 20,
-                                color: Colors.blue[700],
+                            ),
+                          if (project.containsKey('appStore'))
+                            InkWell(
+                              onTap: () {
+                                if (project['appStore'] != "") {
+                                  UrlUtils.openUrl(
+                                      project['appStore'] as String);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'This app will be available on App Store soon. Thank you for your patience.',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      backgroundColor: Colors.blue.shade800,
+                                      duration: const Duration(seconds: 5),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      action: SnackBarAction(
+                                        label: 'CLOSE',
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Tooltip(
+                                message: 'App Store',
+                                child: Container(
+                                  padding: EdgeInsets.all(isMobile ? 6 : 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    FontAwesomeIcons.appStore,
+                                    size: isMobile ? 16 : 20,
+                                    color: Colors.blue[700],
+                                  ),
+                                ),
                               ),
+                            ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          if (project.containsKey('liveUrl') &&
+                              project['liveUrl'] != '#')
+                            InkWell(
+                              onTap: () {
+                                UrlUtils.openUrl(project['liveUrl'] as String);
+                              },
+                              child: Tooltip(
+                                message: 'View Project',
+                                child: Container(
+                                  padding: EdgeInsets.all(isMobile ? 6 : 8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    FontAwesomeIcons.arrowUpRightFromSquare,
+                                    size: isMobile ? 14 : 18,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (project.containsKey('githubUrl'))
+                            Padding(
+                              padding: EdgeInsets.only(left: isMobile ? 4 : 8),
+                              child: InkWell(
+                                onTap: () {
+                                  UrlUtils.openUrl(
+                                      project['githubUrl'] as String);
+                                },
+                                child: Tooltip(
+                                  message: 'Source Code',
+                                  child: Container(
+                                    padding: EdgeInsets.all(isMobile ? 6 : 8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[800],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      FontAwesomeIcons.github,
+                                      size: isMobile ? 14 : 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      // project['playStore'] != "" && project['appStore'] != ""
+                      //     ?
+                      InkWell(
+                        onTap: () {
+                          if (project['driverLink'] != "") {
+                            UrlUtils.openUrl(project['driverLink'] as String);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text(
+                                  'This app will be available on Google drive soon. Thank you for your patience.',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                backgroundColor: Colors.blue.shade800,
+                                duration: const Duration(seconds: 5),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                action: SnackBarAction(
+                                  label: 'CLOSE',
+                                  textColor: Colors.white,
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: Tooltip(
+                          message: 'Google Drive',
+                          child: Container(
+                            padding: EdgeInsets.all(isMobile ? 6 : 8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              FontAwesomeIcons.googleDrive,
+                              size: isMobile ? 16 : 20,
+                              color: Colors.blue[700],
                             ),
                           ),
                         ),
+                      )
+                      // : SizedBox(),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -833,83 +850,26 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                                   ),
                             ),
                             const SizedBox(height: 12),
-                            project['isDeployed'] == '1'
-                                ? Row(
-                                    children: [
-                                      if (project.containsKey('playStore'))
-                                        ElevatedButton.icon(
-                                          onPressed: () {
-                                            if (project['playStore'] != "") {
-                                              UrlUtils.openUrl(
-                                                  project['playStore']
-                                                      as String);
-                                            }
-                                            Navigator.of(dialogContext)
-                                                .pop(); // Close dialog after action
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.googlePlay,
-                                            size: isMobile ? 16 : 18,
-                                          ),
-                                          label: Text(
-                                            'Play Store',
-                                            style: TextStyle(
-                                                fontSize: isMobile ? 12 : 16),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green[700],
-                                            foregroundColor: Colors.white,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: isMobile ? 12 : 16,
-                                                vertical: 12),
-                                          ),
-                                        ),
-                                      const SizedBox(width: 12),
-                                      if (project.containsKey('appStore'))
-                                        ElevatedButton.icon(
-                                          onPressed: () {
-                                            if (project['appStore'] != "") {
-                                              UrlUtils.openUrl(
-                                                  project['appStore']
-                                                      as String);
-                                            }
-                                            Navigator.of(dialogContext)
-                                                .pop(); // Close dialog after action
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.appStore,
-                                            size: isMobile ? 16 : 20,
-                                          ),
-                                          label: Text(
-                                            'App Store',
-                                            style: TextStyle(
-                                                fontSize: isMobile ? 12 : 16),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.blue[700],
-                                            foregroundColor: Colors.white,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: isMobile ? 12 : 16,
-                                                vertical: 12),
-                                          ),
-                                        ),
-                                    ],
-                                  )
-                                : ElevatedButton.icon(
+                            // project['isDeployed'] == '0'
+                            //     ?
+                            Row(
+                              children: [
+                                if (project.containsKey('playStore'))
+                                  ElevatedButton.icon(
                                     onPressed: () {
-                                      if (project['driverLink'] != "") {
+                                      if (project['playStore'] != "") {
                                         UrlUtils.openUrl(
-                                            project['driverLink'] as String);
+                                            project['playStore'] as String);
                                       }
                                       Navigator.of(dialogContext)
                                           .pop(); // Close dialog after action
                                     },
                                     icon: Icon(
-                                      FontAwesomeIcons.googleDrive,
+                                      FontAwesomeIcons.googlePlay,
                                       size: isMobile ? 16 : 18,
                                     ),
                                     label: Text(
-                                      'Google Drive',
+                                      'Play Store',
                                       style: TextStyle(
                                           fontSize: isMobile ? 12 : 16),
                                     ),
@@ -921,6 +881,115 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                                           vertical: 12),
                                     ),
                                   ),
+                                const SizedBox(width: 12),
+                                if (project.containsKey('appStore'))
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      if (project['appStore'] != "") {
+                                        UrlUtils.openUrl(
+                                            project['appStore'] as String);
+                                      }
+                                      Navigator.of(dialogContext)
+                                          .pop(); // Close dialog after action
+                                    },
+                                    icon: Icon(
+                                      FontAwesomeIcons.appStore,
+                                      size: isMobile ? 16 : 20,
+                                    ),
+                                    label: Text(
+                                      'App Store',
+                                      style: TextStyle(
+                                          fontSize: isMobile ? 12 : 16),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[700],
+                                      foregroundColor: Colors.white,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: isMobile ? 12 : 16,
+                                          vertical: 12),
+                                    ),
+                                  ),
+                                const SizedBox(width: 12),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    if (project['driverLink'] != "") {
+                                      UrlUtils.openUrl(
+                                          project['driverLink'] as String);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: const Text(
+                                            'This app will be available on Google drive soon. Thank you for your patience.',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          backgroundColor: Colors.blue.shade800,
+                                          duration: const Duration(seconds: 5),
+                                          behavior: SnackBarBehavior.floating,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          action: SnackBarAction(
+                                            label: 'CLOSE',
+                                            textColor: Colors.white,
+                                            onPressed: () {
+                                              ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar();
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    Navigator.of(dialogContext)
+                                        .pop(); // Close dialog after action
+                                  },
+                                  icon: Icon(
+                                    FontAwesomeIcons.googleDrive,
+                                    size: isMobile ? 16 : 18,
+                                  ),
+                                  label: Text(
+                                    'Google Drive',
+                                    style:
+                                        TextStyle(fontSize: isMobile ? 12 : 16),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green[700],
+                                    foregroundColor: Colors.white,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: isMobile ? 12 : 16,
+                                        vertical: 12),
+                                  ),
+                                ),
+                              ],
+                            )
+                            //:
+                            // ElevatedButton.icon(
+                            //     onPressed: () {
+                            //       if (project['driverLink'] != "") {
+                            //         UrlUtils.openUrl(
+                            //             project['driverLink'] as String);
+                            //       }
+                            //       Navigator.of(dialogContext)
+                            //           .pop(); // Close dialog after action
+                            //     },
+                            //     icon: Icon(
+                            //       FontAwesomeIcons.googleDrive,
+                            //       size: isMobile ? 16 : 18,
+                            //     ),
+                            //     label: Text(
+                            //       'Google Drive',
+                            //       style: TextStyle(
+                            //           fontSize: isMobile ? 12 : 16),
+                            //     ),
+                            //     style: ElevatedButton.styleFrom(
+                            //       backgroundColor: Colors.green[700],
+                            //       foregroundColor: Colors.white,
+                            //       padding: EdgeInsets.symmetric(
+                            //           horizontal: isMobile ? 12 : 16,
+                            //           vertical: 12),
+                            //     ),
+                            //   ),
                           ],
                         ),
                       const SizedBox(height: 16),

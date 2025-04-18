@@ -97,7 +97,6 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
           'https://play.google.com/store/apps/details?id=coretext.digital',
       'appStore': '',
       'category': 'healthcare',
-      'isDeployed': '1',
       'driverLink': '',
     },
     {
@@ -111,7 +110,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'playStore': '',
       'appStore': '',
       'category': 'education',
-      'isDeployed': '1',
+      'driverLink':
+          'https://drive.google.com/file/d/1DsutWCthne0mrAR04eJLhmYDAapi4Hcd/view?usp=drive_link',
     },
     {
       'title': 'WorksJoy (HRMS)',
@@ -124,7 +124,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'playStore': '',
       'appStore': '',
       'category': 'management',
-      'isDeployed': '1',
+      'driverLink':
+          'https://drive.google.com/file/d/1_2JYJHkdZzjmwzvMXugh9Rg90uttF5L4/view?usp=drive_link',
     },
     {
       'title': 'Nishchinta (Canteen Management)',
@@ -138,7 +139,8 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
           'https://play.google.com/store/apps/details?id=com.daccess.nishintacms&pli=1',
       'appStore': 'https://apps.apple.com/us/app/annasree/id6698878410',
       'category': 'management',
-      'isDeployed': '1',
+      'driverLink':
+          'https://drive.google.com/file/d/1e3oscxtP3ZjRgpLIfbm_GU_1nD5nhNVt/view?usp=drive_link',
     },
     {
       'title': 'Parking Management App',
@@ -151,7 +153,6 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'playStore': '',
       'appStore': '',
       'category': 'utility',
-      'isDeployed': '0',
       'driverLink': '',
     },
     {
@@ -162,11 +163,11 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'assetImage': 'assets/images/all.png',
       'technologies': ['Flutter', 'Real-time', 'Scheduling'],
       'liveUrl': '#',
-      'playStore':
-          'https://play.google.com/apps/test/RQ9K_bqHUjI/ahAO29uNSvL9nia2sOgFiFsdMQEUAQE1txF36EQUyjIIY_R5G_vkN9FmUehT5y6aFkBY9Fz78CtBwP4dN7YO1P9TaX',
+      'playStore': '',
       'appStore': '',
       'category': 'utility',
-      'isDeployed': '1',
+      'driverLink':
+          'https://drive.google.com/file/d/1X8otSINq9vULREDRg4si8U1oJxsqfIPg/view?usp=drive_link',
     },
     {
       'title': 'Site Survey Application',
@@ -180,7 +181,7 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
           'https://play.google.com/store/apps/details?id=com.survey.siteSurvey',
       'appStore': 'https://apps.apple.com/us/app/site-survey/id6523421935',
       'category': 'utility',
-      'isDeployed': '1',
+      'driverLink': '',
     },
     {
       'title': 'Personal Portfolio App',
@@ -188,6 +189,7 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
           'Responsive Flutter portfolio app showcasing projects, experience, and skills with clean UI and smooth navigation. Built using GetX and REST API integration.',
       'image': 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
       'assetImage': 'assets/images/profile.png',
+      'svg': 'assets/images/portfolio.svg',
       'technologies': ['Flutter', 'REST API', 'GetX'],
       'liveUrl': '#',
       'playStore':
@@ -195,7 +197,6 @@ Senior Flutter Developer with proven expertise in building user-friendly mobile 
       'appStore':
           'https://apps.apple.com/us/app/personal-portfolio/id6523424567',
       'category': 'portfolio',
-      'isDeployed': '0',
       'driverLink': '',
     },
   ];
